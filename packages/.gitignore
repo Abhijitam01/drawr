@@ -1,0 +1,10 @@
+/node_modules
+/dist
+/build
+/.turbo
+/.next
+/.expo
+/.expo-shared
+/.vscode
+.DS_Store
+.env        
