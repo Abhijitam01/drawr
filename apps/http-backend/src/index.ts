@@ -1,12 +1,17 @@
+import dotenv from "dotenv";
+dotenv.config({ path: "../../.env" });
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '@repo/backend-common/config';
 import { middleware } from './middleware';
 import { CreateUserSchema , SigninSchema , CreateRoomSchema} from "@repo/common/types"
 import { prismaClient } from "@repo/db/client" ;
-import { parse } from 'path';
+
+
+
 
 const app = express();
+app.use(express.json())
 
 app.post("/signup",(req , res) => {
 
@@ -22,7 +27,7 @@ app.post("/signup",(req , res) => {
     data :{
       email    : parsedData.data?.username ,
       password : parsedData.data.password,
-      name     : parsedData.data.name,
+      name     : parsedData.data.name
     }
   })
   res.json({
