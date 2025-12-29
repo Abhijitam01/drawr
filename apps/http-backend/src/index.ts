@@ -39,7 +39,7 @@ app.post("/signin",(req , res) => {
     token
   })
 })
-app.post("/room",middleware , (req , res) => {
+app.post("/room", middleware , (req , res) => {
 
   const data = CreateRoomSchema.safeParse(req.body);
   if(!data.success){
