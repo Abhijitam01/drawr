@@ -2,12 +2,29 @@ import { WebSocketServer } from "ws";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { JWT_SECRET } from "@repo/backend-common/config";
 
-// Prefer configurable port to avoid EADDRINUSE conflicts
-// Default to 8090 to avoid common system ports (8080/8081 often used)
 const WS_PORT = Number(process.env.WS_PORT) || 8080;
-
 const wss = new WebSocketServer({ port: WS_PORT });
-console.log(`WebSocket server started on ws://localhost:${WS_PORT}`);
+
+interface User {
+  ws : WebSocket ,
+  rooms : string[] ,
+  userId : string
+}
+
+const users : User[] = [];
+
+function checkUser(token : string) : string | null {
+  const decoded = jwt.verify(token , JWT_SECRET);
+
+  if(typeof decoded == "string"){
+    return null ;
+  }
+
+  if(!decoded || !decoded.userId){
+    return null ;
+  }
+  return decoded.userId
+}
 
 wss.on("connection", (ws , request) => {
   const url = request.url;
@@ -16,25 +33,11 @@ wss.on("connection", (ws , request) => {
   }
 
   const queryParams = new URLSearchParams(url.split('?')[1]);
-  const token = queryParams.get('token') ;
+  const token = queryParams.get('token') || "";
+  const userId = checkUser(token) ;
 
-  if(!token){
-    ws.close();
-    return  ;
-  }
-
-  let decoded: JwtPayload;
-
-  try { 
-    decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
-  } catch {
-    ws.close();
-    return;
-  }
-
-  if (!decoded.userId) {
-    ws.close();
-    return;
+  if(!userId) {
+    ws.close()
   }
 
 
