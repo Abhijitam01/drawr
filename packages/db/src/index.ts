@@ -1,10 +1,11 @@
 import { PrismaClient } from "./generated/prisma/index.js";
+import { PrismaPg } from "@prisma/adapter-pg";
+import pg from "pg";
 
-const accelerateUrl = process.env.DATABASE_URL;
-if (!accelerateUrl) {
-  throw new Error("DATABASE_URL is not set");
-}
+const pool = new pg.Pool({
+  connectionString: process.env.DATABASE_URL,
+});
 
 export const prismaClient = new PrismaClient({
-  accelerateUrl,
+  adapter: new PrismaPg(pool),
 });
