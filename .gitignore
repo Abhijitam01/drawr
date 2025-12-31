@@ -1,49 +1,28 @@
-# ============================================
-# Root Monorepo .gitignore
-# ============================================
 
-# ============================================
-# Dependencies
-# ============================================
 node_modules/
 .pnp
 .pnp.js
 .pnp.*
-.yarn/cache
-.yarn/unplugged
-.yarn/build-state.yml
-.yarn/install-state.gz
 
-# ============================================
 # Package Manager Files
-# ============================================
-# Keep lock files, but ignore package manager internals
-.npm
-.yarn-integrity
-package-lock.json
-yarn.lock
-# Keep pnpm-lock.yaml (it's committed in monorepos)
 
-# ============================================
+.npm
+
+package-lock.json
+
+
 # Build Outputs
-# ============================================
 dist/
 build/
 out/
 *.tsbuildinfo
 *.tsbuildinfo.json
 
-# ============================================
-# Turborepo
-# ============================================
 # Turbo cache
 .turbo/
 .turbo/**
 
 
-# ============================================
-# Environment Variables
-# ============================================
 .env
 .env.*
 !.env.example
@@ -53,18 +32,12 @@ out/
 .env.test.local
 .env.production.local
 
-# ============================================
-# Testing
-# ============================================
 coverage/
 *.lcov
 .nyc_output/
 *.test.js.snap
 .jest/
 
-# ============================================
-# Logs
-# ============================================
 logs/
 *.log
 npm-debug.log*
@@ -74,9 +47,6 @@ pnpm-debug.log*
 lerna-debug.log*
 .pnpm-debug.log*
 
-# ============================================
-# Runtime & Cache
-# ============================================
 .cache/
 .parcel-cache/
 .next/
@@ -88,10 +58,8 @@ lerna-debug.log*
 .tern-port
 .vscode-test/
 
-# ============================================
-# IDE & Editors
-# ============================================
-# VSCode
+# VSCode 
+
 .vscode/
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -99,147 +67,3 @@ lerna-debug.log*
 !.vscode/extensions.json
 *.code-workspace
 
-# JetBrains IDEs
-.idea/
-*.iml
-*.iws
-*.ipr
-out/
-
-# Vim
-*.swp
-*.swo
-*~
-.*.sw[a-z]
-*.un~
-
-# Emacs
-*~
-\#*\#
-/.emacs.desktop
-/.emacs.desktop.lock
-*.elc
-auto-save-list
-tramp
-.\#*
-
-# Sublime Text
-*.sublime-workspace
-*.sublime-project
-
-# ============================================
-# OS Files
-# ============================================
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-Icon
-._*
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-
-# Windows
-Thumbs.db
-Thumbs.db:encryptable
-ehthumbs.db
-ehthumbs_vista.db
-*.stackdump
-[Dd]esktop.ini
-$RECYCLE.BIN/
-*.cab
-*.msi
-*.msix
-*.msm
-*.msp
-*.lnk
-
-# Linux
-*~
-.directory
-.Trash-*
-.nfs*
-
-# ============================================
-# Temporary Files
-# ============================================
-*.tmp
-*.temp
-*.bak
-*.backup
-*.old
-*.orig
-*.save
-*.swp
-*.swo
-*~
-
-# ============================================
-# Misc
-# ============================================
-*.pid
-*.seed
-*.pid.lock
-lib-cov
-.eslintcache
-.stylelintcache
-.stylelintcache.json
-.rollup.cache/
-.rpt2_cache/
-.rts2_cache_cjs/
-.rts2_cache_es/
-.rts2_cache_umd/
-.sass-cache/
-.connect.lock
-.typings/
-typings/
-*.tgz
-*.tar.gz
-
-# ============================================
-# Database
-# ============================================
-*.db
-*.sqlite
-*.sqlite3
-*.db-journal
-*.db-shm
-*.db-wal
-
-# ============================================
-# Prisma (handled in packages/db/.gitignore)
-# ============================================
-# Generated Prisma client files are ignored at package level
-
-# ============================================
-# Security & Secrets
-# ============================================
-*.pem
-*.key
-*.cert
-*.crt
-*.p12
-*.pfx
-secrets/
-.secrets/
-*.secret
-
-# ============================================
-# Deployment
-# ============================================
-.vercel
-.netlify
-.serverless/
-.fusebox/
-.dynamodb/
-.aws-sam/
