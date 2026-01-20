@@ -28,6 +28,11 @@ export type Room = $Result.DefaultSelection<Prisma.$RoomPayload>
  * 
  */
 export type Chat = $Result.DefaultSelection<Prisma.$ChatPayload>
+/**
+ * Model Shape
+ * 
+ */
+export type Shape = $Result.DefaultSelection<Prisma.$ShapePayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -175,6 +180,16 @@ export class PrismaClient<
     * ```
     */
   get chat(): Prisma.ChatDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.shape`: Exposes CRUD operations for the **Shape** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Shapes
+    * const shapes = await prisma.shape.findMany()
+    * ```
+    */
+  get shape(): Prisma.ShapeDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -611,7 +626,8 @@ export namespace Prisma {
   export const ModelName: {
     User: 'User',
     Room: 'Room',
-    Chat: 'Chat'
+    Chat: 'Chat',
+    Shape: 'Shape'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -627,7 +643,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "room" | "chat"
+      modelProps: "user" | "room" | "chat" | "shape"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -853,6 +869,80 @@ export namespace Prisma {
           }
         }
       }
+      Shape: {
+        payload: Prisma.$ShapePayload<ExtArgs>
+        fields: Prisma.ShapeFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ShapeFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShapePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ShapeFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShapePayload>
+          }
+          findFirst: {
+            args: Prisma.ShapeFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShapePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ShapeFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShapePayload>
+          }
+          findMany: {
+            args: Prisma.ShapeFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShapePayload>[]
+          }
+          create: {
+            args: Prisma.ShapeCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShapePayload>
+          }
+          createMany: {
+            args: Prisma.ShapeCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ShapeCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShapePayload>[]
+          }
+          delete: {
+            args: Prisma.ShapeDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShapePayload>
+          }
+          update: {
+            args: Prisma.ShapeUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShapePayload>
+          }
+          deleteMany: {
+            args: Prisma.ShapeDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ShapeUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ShapeUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShapePayload>[]
+          }
+          upsert: {
+            args: Prisma.ShapeUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShapePayload>
+          }
+          aggregate: {
+            args: Prisma.ShapeAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateShape>
+          }
+          groupBy: {
+            args: Prisma.ShapeGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ShapeGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ShapeCountArgs<ExtArgs>
+            result: $Utils.Optional<ShapeCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -964,6 +1054,7 @@ export namespace Prisma {
     user?: UserOmit
     room?: RoomOmit
     chat?: ChatOmit
+    shape?: ShapeOmit
   }
 
   /* Types for Logging */
@@ -1046,11 +1137,13 @@ export namespace Prisma {
   export type UserCountOutputType = {
     rooms: number
     chats: number
+    shapes: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     rooms?: boolean | UserCountOutputTypeCountRoomsArgs
     chats?: boolean | UserCountOutputTypeCountChatsArgs
+    shapes?: boolean | UserCountOutputTypeCountShapesArgs
   }
 
   // Custom InputTypes
@@ -1078,6 +1171,13 @@ export namespace Prisma {
     where?: ChatWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountShapesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ShapeWhereInput
+  }
+
 
   /**
    * Count Type RoomCountOutputType
@@ -1085,10 +1185,12 @@ export namespace Prisma {
 
   export type RoomCountOutputType = {
     chats: number
+    shapes: number
   }
 
   export type RoomCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chats?: boolean | RoomCountOutputTypeCountChatsArgs
+    shapes?: boolean | RoomCountOutputTypeCountShapesArgs
   }
 
   // Custom InputTypes
@@ -1107,6 +1209,13 @@ export namespace Prisma {
    */
   export type RoomCountOutputTypeCountChatsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ChatWhereInput
+  }
+
+  /**
+   * RoomCountOutputType without action
+   */
+  export type RoomCountOutputTypeCountShapesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ShapeWhereInput
   }
 
 
@@ -1130,6 +1239,8 @@ export namespace Prisma {
     password: string | null
     name: string | null
     photo: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1138,6 +1249,8 @@ export namespace Prisma {
     password: string | null
     name: string | null
     photo: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1146,6 +1259,8 @@ export namespace Prisma {
     password: number
     name: number
     photo: number
+    createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -1156,6 +1271,8 @@ export namespace Prisma {
     password?: true
     name?: true
     photo?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1164,6 +1281,8 @@ export namespace Prisma {
     password?: true
     name?: true
     photo?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1172,6 +1291,8 @@ export namespace Prisma {
     password?: true
     name?: true
     photo?: true
+    createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -1253,6 +1374,8 @@ export namespace Prisma {
     password: string
     name: string
     photo: string | null
+    createdAt: Date
+    updatedAt: Date
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -1278,8 +1401,11 @@ export namespace Prisma {
     password?: boolean
     name?: boolean
     photo?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     rooms?: boolean | User$roomsArgs<ExtArgs>
     chats?: boolean | User$chatsArgs<ExtArgs>
+    shapes?: boolean | User$shapesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1289,6 +1415,8 @@ export namespace Prisma {
     password?: boolean
     name?: boolean
     photo?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1297,6 +1425,8 @@ export namespace Prisma {
     password?: boolean
     name?: boolean
     photo?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -1305,12 +1435,15 @@ export namespace Prisma {
     password?: boolean
     name?: boolean
     photo?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "photo", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "photo" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     rooms?: boolean | User$roomsArgs<ExtArgs>
     chats?: boolean | User$chatsArgs<ExtArgs>
+    shapes?: boolean | User$shapesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1321,6 +1454,7 @@ export namespace Prisma {
     objects: {
       rooms: Prisma.$RoomPayload<ExtArgs>[]
       chats: Prisma.$ChatPayload<ExtArgs>[]
+      shapes: Prisma.$ShapePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -1328,6 +1462,8 @@ export namespace Prisma {
       password: string
       name: string
       photo: string | null
+      createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -1724,6 +1860,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     rooms<T extends User$roomsArgs<ExtArgs> = {}>(args?: Subset<T, User$roomsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     chats<T extends User$chatsArgs<ExtArgs> = {}>(args?: Subset<T, User$chatsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    shapes<T extends User$shapesArgs<ExtArgs> = {}>(args?: Subset<T, User$shapesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ShapePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1758,6 +1895,8 @@ export namespace Prisma {
     readonly password: FieldRef<"User", 'String'>
     readonly name: FieldRef<"User", 'String'>
     readonly photo: FieldRef<"User", 'String'>
+    readonly createdAt: FieldRef<"User", 'DateTime'>
+    readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
     
 
@@ -2194,6 +2333,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.shapes
+   */
+  export type User$shapesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Shape
+     */
+    select?: ShapeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Shape
+     */
+    omit?: ShapeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShapeInclude<ExtArgs> | null
+    where?: ShapeWhereInput
+    orderBy?: ShapeOrderByWithRelationInput | ShapeOrderByWithRelationInput[]
+    cursor?: ShapeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ShapeScalarFieldEnum | ShapeScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2235,21 +2398,24 @@ export namespace Prisma {
   export type RoomMinAggregateOutputType = {
     id: number | null
     slug: string | null
-    createdt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
     adminId: string | null
   }
 
   export type RoomMaxAggregateOutputType = {
     id: number | null
     slug: string | null
-    createdt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
     adminId: string | null
   }
 
   export type RoomCountAggregateOutputType = {
     id: number
     slug: number
-    createdt: number
+    createdAt: number
+    updatedAt: number
     adminId: number
     _all: number
   }
@@ -2266,21 +2432,24 @@ export namespace Prisma {
   export type RoomMinAggregateInputType = {
     id?: true
     slug?: true
-    createdt?: true
+    createdAt?: true
+    updatedAt?: true
     adminId?: true
   }
 
   export type RoomMaxAggregateInputType = {
     id?: true
     slug?: true
-    createdt?: true
+    createdAt?: true
+    updatedAt?: true
     adminId?: true
   }
 
   export type RoomCountAggregateInputType = {
     id?: true
     slug?: true
-    createdt?: true
+    createdAt?: true
+    updatedAt?: true
     adminId?: true
     _all?: true
   }
@@ -2374,7 +2543,8 @@ export namespace Prisma {
   export type RoomGroupByOutputType = {
     id: number
     slug: string
-    createdt: Date
+    createdAt: Date
+    updatedAt: Date
     adminId: string
     _count: RoomCountAggregateOutputType | null
     _avg: RoomAvgAggregateOutputType | null
@@ -2400,17 +2570,20 @@ export namespace Prisma {
   export type RoomSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     slug?: boolean
-    createdt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     adminId?: boolean
     admin?: boolean | UserDefaultArgs<ExtArgs>
     chats?: boolean | Room$chatsArgs<ExtArgs>
+    shapes?: boolean | Room$shapesArgs<ExtArgs>
     _count?: boolean | RoomCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["room"]>
 
   export type RoomSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     slug?: boolean
-    createdt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     adminId?: boolean
     admin?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["room"]>
@@ -2418,7 +2591,8 @@ export namespace Prisma {
   export type RoomSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     slug?: boolean
-    createdt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     adminId?: boolean
     admin?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["room"]>
@@ -2426,14 +2600,16 @@ export namespace Prisma {
   export type RoomSelectScalar = {
     id?: boolean
     slug?: boolean
-    createdt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     adminId?: boolean
   }
 
-  export type RoomOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "createdt" | "adminId", ExtArgs["result"]["room"]>
+  export type RoomOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "createdAt" | "updatedAt" | "adminId", ExtArgs["result"]["room"]>
   export type RoomInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     admin?: boolean | UserDefaultArgs<ExtArgs>
     chats?: boolean | Room$chatsArgs<ExtArgs>
+    shapes?: boolean | Room$shapesArgs<ExtArgs>
     _count?: boolean | RoomCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type RoomIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2448,11 +2624,13 @@ export namespace Prisma {
     objects: {
       admin: Prisma.$UserPayload<ExtArgs>
       chats: Prisma.$ChatPayload<ExtArgs>[]
+      shapes: Prisma.$ShapePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       slug: string
-      createdt: Date
+      createdAt: Date
+      updatedAt: Date
       adminId: string
     }, ExtArgs["result"]["room"]>
     composites: {}
@@ -2850,6 +3028,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     admin<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     chats<T extends Room$chatsArgs<ExtArgs> = {}>(args?: Subset<T, Room$chatsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    shapes<T extends Room$shapesArgs<ExtArgs> = {}>(args?: Subset<T, Room$shapesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ShapePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2881,7 +3060,8 @@ export namespace Prisma {
   interface RoomFieldRefs {
     readonly id: FieldRef<"Room", 'Int'>
     readonly slug: FieldRef<"Room", 'String'>
-    readonly createdt: FieldRef<"Room", 'DateTime'>
+    readonly createdAt: FieldRef<"Room", 'DateTime'>
+    readonly updatedAt: FieldRef<"Room", 'DateTime'>
     readonly adminId: FieldRef<"Room", 'String'>
   }
     
@@ -3303,6 +3483,30 @@ export namespace Prisma {
   }
 
   /**
+   * Room.shapes
+   */
+  export type Room$shapesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Shape
+     */
+    select?: ShapeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Shape
+     */
+    omit?: ShapeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShapeInclude<ExtArgs> | null
+    where?: ShapeWhereInput
+    orderBy?: ShapeOrderByWithRelationInput | ShapeOrderByWithRelationInput[]
+    cursor?: ShapeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ShapeScalarFieldEnum | ShapeScalarFieldEnum[]
+  }
+
+  /**
    * Room without action
    */
   export type RoomDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3348,6 +3552,7 @@ export namespace Prisma {
     roomId: number | null
     message: string | null
     userId: string | null
+    createdAt: Date | null
   }
 
   export type ChatMaxAggregateOutputType = {
@@ -3355,6 +3560,7 @@ export namespace Prisma {
     roomId: number | null
     message: string | null
     userId: string | null
+    createdAt: Date | null
   }
 
   export type ChatCountAggregateOutputType = {
@@ -3362,6 +3568,7 @@ export namespace Prisma {
     roomId: number
     message: number
     userId: number
+    createdAt: number
     _all: number
   }
 
@@ -3381,6 +3588,7 @@ export namespace Prisma {
     roomId?: true
     message?: true
     userId?: true
+    createdAt?: true
   }
 
   export type ChatMaxAggregateInputType = {
@@ -3388,6 +3596,7 @@ export namespace Prisma {
     roomId?: true
     message?: true
     userId?: true
+    createdAt?: true
   }
 
   export type ChatCountAggregateInputType = {
@@ -3395,6 +3604,7 @@ export namespace Prisma {
     roomId?: true
     message?: true
     userId?: true
+    createdAt?: true
     _all?: true
   }
 
@@ -3489,6 +3699,7 @@ export namespace Prisma {
     roomId: number
     message: string
     userId: string
+    createdAt: Date
     _count: ChatCountAggregateOutputType | null
     _avg: ChatAvgAggregateOutputType | null
     _sum: ChatSumAggregateOutputType | null
@@ -3515,6 +3726,7 @@ export namespace Prisma {
     roomId?: boolean
     message?: boolean
     userId?: boolean
+    createdAt?: boolean
     room?: boolean | RoomDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["chat"]>
@@ -3524,6 +3736,7 @@ export namespace Prisma {
     roomId?: boolean
     message?: boolean
     userId?: boolean
+    createdAt?: boolean
     room?: boolean | RoomDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["chat"]>
@@ -3533,6 +3746,7 @@ export namespace Prisma {
     roomId?: boolean
     message?: boolean
     userId?: boolean
+    createdAt?: boolean
     room?: boolean | RoomDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["chat"]>
@@ -3542,9 +3756,10 @@ export namespace Prisma {
     roomId?: boolean
     message?: boolean
     userId?: boolean
+    createdAt?: boolean
   }
 
-  export type ChatOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "roomId" | "message" | "userId", ExtArgs["result"]["chat"]>
+  export type ChatOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "roomId" | "message" | "userId" | "createdAt", ExtArgs["result"]["chat"]>
   export type ChatInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     room?: boolean | RoomDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -3569,6 +3784,7 @@ export namespace Prisma {
       roomId: number
       message: string
       userId: string
+      createdAt: Date
     }, ExtArgs["result"]["chat"]>
     composites: {}
   }
@@ -3998,6 +4214,7 @@ export namespace Prisma {
     readonly roomId: FieldRef<"Chat", 'Int'>
     readonly message: FieldRef<"Chat", 'String'>
     readonly userId: FieldRef<"Chat", 'String'>
+    readonly createdAt: FieldRef<"Chat", 'DateTime'>
   }
     
 
@@ -4413,6 +4630,1128 @@ export namespace Prisma {
 
 
   /**
+   * Model Shape
+   */
+
+  export type AggregateShape = {
+    _count: ShapeCountAggregateOutputType | null
+    _avg: ShapeAvgAggregateOutputType | null
+    _sum: ShapeSumAggregateOutputType | null
+    _min: ShapeMinAggregateOutputType | null
+    _max: ShapeMaxAggregateOutputType | null
+  }
+
+  export type ShapeAvgAggregateOutputType = {
+    roomId: number | null
+  }
+
+  export type ShapeSumAggregateOutputType = {
+    roomId: number | null
+  }
+
+  export type ShapeMinAggregateOutputType = {
+    id: string | null
+    roomId: number | null
+    type: string | null
+    userId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ShapeMaxAggregateOutputType = {
+    id: string | null
+    roomId: number | null
+    type: string | null
+    userId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ShapeCountAggregateOutputType = {
+    id: number
+    roomId: number
+    type: number
+    data: number
+    userId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ShapeAvgAggregateInputType = {
+    roomId?: true
+  }
+
+  export type ShapeSumAggregateInputType = {
+    roomId?: true
+  }
+
+  export type ShapeMinAggregateInputType = {
+    id?: true
+    roomId?: true
+    type?: true
+    userId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ShapeMaxAggregateInputType = {
+    id?: true
+    roomId?: true
+    type?: true
+    userId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ShapeCountAggregateInputType = {
+    id?: true
+    roomId?: true
+    type?: true
+    data?: true
+    userId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ShapeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Shape to aggregate.
+     */
+    where?: ShapeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Shapes to fetch.
+     */
+    orderBy?: ShapeOrderByWithRelationInput | ShapeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ShapeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Shapes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Shapes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Shapes
+    **/
+    _count?: true | ShapeCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ShapeAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ShapeSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ShapeMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ShapeMaxAggregateInputType
+  }
+
+  export type GetShapeAggregateType<T extends ShapeAggregateArgs> = {
+        [P in keyof T & keyof AggregateShape]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateShape[P]>
+      : GetScalarType<T[P], AggregateShape[P]>
+  }
+
+
+
+
+  export type ShapeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ShapeWhereInput
+    orderBy?: ShapeOrderByWithAggregationInput | ShapeOrderByWithAggregationInput[]
+    by: ShapeScalarFieldEnum[] | ShapeScalarFieldEnum
+    having?: ShapeScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ShapeCountAggregateInputType | true
+    _avg?: ShapeAvgAggregateInputType
+    _sum?: ShapeSumAggregateInputType
+    _min?: ShapeMinAggregateInputType
+    _max?: ShapeMaxAggregateInputType
+  }
+
+  export type ShapeGroupByOutputType = {
+    id: string
+    roomId: number
+    type: string
+    data: JsonValue
+    userId: string
+    createdAt: Date
+    updatedAt: Date
+    _count: ShapeCountAggregateOutputType | null
+    _avg: ShapeAvgAggregateOutputType | null
+    _sum: ShapeSumAggregateOutputType | null
+    _min: ShapeMinAggregateOutputType | null
+    _max: ShapeMaxAggregateOutputType | null
+  }
+
+  type GetShapeGroupByPayload<T extends ShapeGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ShapeGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ShapeGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ShapeGroupByOutputType[P]>
+            : GetScalarType<T[P], ShapeGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ShapeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    roomId?: boolean
+    type?: boolean
+    data?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    room?: boolean | RoomDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["shape"]>
+
+  export type ShapeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    roomId?: boolean
+    type?: boolean
+    data?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    room?: boolean | RoomDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["shape"]>
+
+  export type ShapeSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    roomId?: boolean
+    type?: boolean
+    data?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    room?: boolean | RoomDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["shape"]>
+
+  export type ShapeSelectScalar = {
+    id?: boolean
+    roomId?: boolean
+    type?: boolean
+    data?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ShapeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "roomId" | "type" | "data" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["shape"]>
+  export type ShapeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    room?: boolean | RoomDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ShapeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    room?: boolean | RoomDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ShapeIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    room?: boolean | RoomDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $ShapePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Shape"
+    objects: {
+      room: Prisma.$RoomPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      roomId: number
+      type: string
+      data: Prisma.JsonValue
+      userId: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["shape"]>
+    composites: {}
+  }
+
+  type ShapeGetPayload<S extends boolean | null | undefined | ShapeDefaultArgs> = $Result.GetResult<Prisma.$ShapePayload, S>
+
+  type ShapeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ShapeFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ShapeCountAggregateInputType | true
+    }
+
+  export interface ShapeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Shape'], meta: { name: 'Shape' } }
+    /**
+     * Find zero or one Shape that matches the filter.
+     * @param {ShapeFindUniqueArgs} args - Arguments to find a Shape
+     * @example
+     * // Get one Shape
+     * const shape = await prisma.shape.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ShapeFindUniqueArgs>(args: SelectSubset<T, ShapeFindUniqueArgs<ExtArgs>>): Prisma__ShapeClient<$Result.GetResult<Prisma.$ShapePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Shape that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ShapeFindUniqueOrThrowArgs} args - Arguments to find a Shape
+     * @example
+     * // Get one Shape
+     * const shape = await prisma.shape.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ShapeFindUniqueOrThrowArgs>(args: SelectSubset<T, ShapeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ShapeClient<$Result.GetResult<Prisma.$ShapePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Shape that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShapeFindFirstArgs} args - Arguments to find a Shape
+     * @example
+     * // Get one Shape
+     * const shape = await prisma.shape.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ShapeFindFirstArgs>(args?: SelectSubset<T, ShapeFindFirstArgs<ExtArgs>>): Prisma__ShapeClient<$Result.GetResult<Prisma.$ShapePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Shape that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShapeFindFirstOrThrowArgs} args - Arguments to find a Shape
+     * @example
+     * // Get one Shape
+     * const shape = await prisma.shape.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ShapeFindFirstOrThrowArgs>(args?: SelectSubset<T, ShapeFindFirstOrThrowArgs<ExtArgs>>): Prisma__ShapeClient<$Result.GetResult<Prisma.$ShapePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Shapes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShapeFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Shapes
+     * const shapes = await prisma.shape.findMany()
+     * 
+     * // Get first 10 Shapes
+     * const shapes = await prisma.shape.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const shapeWithIdOnly = await prisma.shape.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ShapeFindManyArgs>(args?: SelectSubset<T, ShapeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ShapePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Shape.
+     * @param {ShapeCreateArgs} args - Arguments to create a Shape.
+     * @example
+     * // Create one Shape
+     * const Shape = await prisma.shape.create({
+     *   data: {
+     *     // ... data to create a Shape
+     *   }
+     * })
+     * 
+     */
+    create<T extends ShapeCreateArgs>(args: SelectSubset<T, ShapeCreateArgs<ExtArgs>>): Prisma__ShapeClient<$Result.GetResult<Prisma.$ShapePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Shapes.
+     * @param {ShapeCreateManyArgs} args - Arguments to create many Shapes.
+     * @example
+     * // Create many Shapes
+     * const shape = await prisma.shape.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ShapeCreateManyArgs>(args?: SelectSubset<T, ShapeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Shapes and returns the data saved in the database.
+     * @param {ShapeCreateManyAndReturnArgs} args - Arguments to create many Shapes.
+     * @example
+     * // Create many Shapes
+     * const shape = await prisma.shape.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Shapes and only return the `id`
+     * const shapeWithIdOnly = await prisma.shape.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ShapeCreateManyAndReturnArgs>(args?: SelectSubset<T, ShapeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ShapePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Shape.
+     * @param {ShapeDeleteArgs} args - Arguments to delete one Shape.
+     * @example
+     * // Delete one Shape
+     * const Shape = await prisma.shape.delete({
+     *   where: {
+     *     // ... filter to delete one Shape
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ShapeDeleteArgs>(args: SelectSubset<T, ShapeDeleteArgs<ExtArgs>>): Prisma__ShapeClient<$Result.GetResult<Prisma.$ShapePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Shape.
+     * @param {ShapeUpdateArgs} args - Arguments to update one Shape.
+     * @example
+     * // Update one Shape
+     * const shape = await prisma.shape.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ShapeUpdateArgs>(args: SelectSubset<T, ShapeUpdateArgs<ExtArgs>>): Prisma__ShapeClient<$Result.GetResult<Prisma.$ShapePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Shapes.
+     * @param {ShapeDeleteManyArgs} args - Arguments to filter Shapes to delete.
+     * @example
+     * // Delete a few Shapes
+     * const { count } = await prisma.shape.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ShapeDeleteManyArgs>(args?: SelectSubset<T, ShapeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Shapes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShapeUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Shapes
+     * const shape = await prisma.shape.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ShapeUpdateManyArgs>(args: SelectSubset<T, ShapeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Shapes and returns the data updated in the database.
+     * @param {ShapeUpdateManyAndReturnArgs} args - Arguments to update many Shapes.
+     * @example
+     * // Update many Shapes
+     * const shape = await prisma.shape.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Shapes and only return the `id`
+     * const shapeWithIdOnly = await prisma.shape.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ShapeUpdateManyAndReturnArgs>(args: SelectSubset<T, ShapeUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ShapePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Shape.
+     * @param {ShapeUpsertArgs} args - Arguments to update or create a Shape.
+     * @example
+     * // Update or create a Shape
+     * const shape = await prisma.shape.upsert({
+     *   create: {
+     *     // ... data to create a Shape
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Shape we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ShapeUpsertArgs>(args: SelectSubset<T, ShapeUpsertArgs<ExtArgs>>): Prisma__ShapeClient<$Result.GetResult<Prisma.$ShapePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Shapes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShapeCountArgs} args - Arguments to filter Shapes to count.
+     * @example
+     * // Count the number of Shapes
+     * const count = await prisma.shape.count({
+     *   where: {
+     *     // ... the filter for the Shapes we want to count
+     *   }
+     * })
+    **/
+    count<T extends ShapeCountArgs>(
+      args?: Subset<T, ShapeCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ShapeCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Shape.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShapeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ShapeAggregateArgs>(args: Subset<T, ShapeAggregateArgs>): Prisma.PrismaPromise<GetShapeAggregateType<T>>
+
+    /**
+     * Group by Shape.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShapeGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ShapeGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ShapeGroupByArgs['orderBy'] }
+        : { orderBy?: ShapeGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ShapeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetShapeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Shape model
+   */
+  readonly fields: ShapeFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Shape.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ShapeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    room<T extends RoomDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RoomDefaultArgs<ExtArgs>>): Prisma__RoomClient<$Result.GetResult<Prisma.$RoomPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Shape model
+   */
+  interface ShapeFieldRefs {
+    readonly id: FieldRef<"Shape", 'String'>
+    readonly roomId: FieldRef<"Shape", 'Int'>
+    readonly type: FieldRef<"Shape", 'String'>
+    readonly data: FieldRef<"Shape", 'Json'>
+    readonly userId: FieldRef<"Shape", 'String'>
+    readonly createdAt: FieldRef<"Shape", 'DateTime'>
+    readonly updatedAt: FieldRef<"Shape", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Shape findUnique
+   */
+  export type ShapeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Shape
+     */
+    select?: ShapeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Shape
+     */
+    omit?: ShapeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShapeInclude<ExtArgs> | null
+    /**
+     * Filter, which Shape to fetch.
+     */
+    where: ShapeWhereUniqueInput
+  }
+
+  /**
+   * Shape findUniqueOrThrow
+   */
+  export type ShapeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Shape
+     */
+    select?: ShapeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Shape
+     */
+    omit?: ShapeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShapeInclude<ExtArgs> | null
+    /**
+     * Filter, which Shape to fetch.
+     */
+    where: ShapeWhereUniqueInput
+  }
+
+  /**
+   * Shape findFirst
+   */
+  export type ShapeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Shape
+     */
+    select?: ShapeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Shape
+     */
+    omit?: ShapeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShapeInclude<ExtArgs> | null
+    /**
+     * Filter, which Shape to fetch.
+     */
+    where?: ShapeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Shapes to fetch.
+     */
+    orderBy?: ShapeOrderByWithRelationInput | ShapeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Shapes.
+     */
+    cursor?: ShapeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Shapes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Shapes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Shapes.
+     */
+    distinct?: ShapeScalarFieldEnum | ShapeScalarFieldEnum[]
+  }
+
+  /**
+   * Shape findFirstOrThrow
+   */
+  export type ShapeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Shape
+     */
+    select?: ShapeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Shape
+     */
+    omit?: ShapeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShapeInclude<ExtArgs> | null
+    /**
+     * Filter, which Shape to fetch.
+     */
+    where?: ShapeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Shapes to fetch.
+     */
+    orderBy?: ShapeOrderByWithRelationInput | ShapeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Shapes.
+     */
+    cursor?: ShapeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Shapes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Shapes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Shapes.
+     */
+    distinct?: ShapeScalarFieldEnum | ShapeScalarFieldEnum[]
+  }
+
+  /**
+   * Shape findMany
+   */
+  export type ShapeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Shape
+     */
+    select?: ShapeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Shape
+     */
+    omit?: ShapeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShapeInclude<ExtArgs> | null
+    /**
+     * Filter, which Shapes to fetch.
+     */
+    where?: ShapeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Shapes to fetch.
+     */
+    orderBy?: ShapeOrderByWithRelationInput | ShapeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Shapes.
+     */
+    cursor?: ShapeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Shapes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Shapes.
+     */
+    skip?: number
+    distinct?: ShapeScalarFieldEnum | ShapeScalarFieldEnum[]
+  }
+
+  /**
+   * Shape create
+   */
+  export type ShapeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Shape
+     */
+    select?: ShapeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Shape
+     */
+    omit?: ShapeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShapeInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Shape.
+     */
+    data: XOR<ShapeCreateInput, ShapeUncheckedCreateInput>
+  }
+
+  /**
+   * Shape createMany
+   */
+  export type ShapeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Shapes.
+     */
+    data: ShapeCreateManyInput | ShapeCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Shape createManyAndReturn
+   */
+  export type ShapeCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Shape
+     */
+    select?: ShapeSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Shape
+     */
+    omit?: ShapeOmit<ExtArgs> | null
+    /**
+     * The data used to create many Shapes.
+     */
+    data: ShapeCreateManyInput | ShapeCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShapeIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Shape update
+   */
+  export type ShapeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Shape
+     */
+    select?: ShapeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Shape
+     */
+    omit?: ShapeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShapeInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Shape.
+     */
+    data: XOR<ShapeUpdateInput, ShapeUncheckedUpdateInput>
+    /**
+     * Choose, which Shape to update.
+     */
+    where: ShapeWhereUniqueInput
+  }
+
+  /**
+   * Shape updateMany
+   */
+  export type ShapeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Shapes.
+     */
+    data: XOR<ShapeUpdateManyMutationInput, ShapeUncheckedUpdateManyInput>
+    /**
+     * Filter which Shapes to update
+     */
+    where?: ShapeWhereInput
+    /**
+     * Limit how many Shapes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Shape updateManyAndReturn
+   */
+  export type ShapeUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Shape
+     */
+    select?: ShapeSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Shape
+     */
+    omit?: ShapeOmit<ExtArgs> | null
+    /**
+     * The data used to update Shapes.
+     */
+    data: XOR<ShapeUpdateManyMutationInput, ShapeUncheckedUpdateManyInput>
+    /**
+     * Filter which Shapes to update
+     */
+    where?: ShapeWhereInput
+    /**
+     * Limit how many Shapes to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShapeIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Shape upsert
+   */
+  export type ShapeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Shape
+     */
+    select?: ShapeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Shape
+     */
+    omit?: ShapeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShapeInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Shape to update in case it exists.
+     */
+    where: ShapeWhereUniqueInput
+    /**
+     * In case the Shape found by the `where` argument doesn't exist, create a new Shape with this data.
+     */
+    create: XOR<ShapeCreateInput, ShapeUncheckedCreateInput>
+    /**
+     * In case the Shape was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ShapeUpdateInput, ShapeUncheckedUpdateInput>
+  }
+
+  /**
+   * Shape delete
+   */
+  export type ShapeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Shape
+     */
+    select?: ShapeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Shape
+     */
+    omit?: ShapeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShapeInclude<ExtArgs> | null
+    /**
+     * Filter which Shape to delete.
+     */
+    where: ShapeWhereUniqueInput
+  }
+
+  /**
+   * Shape deleteMany
+   */
+  export type ShapeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Shapes to delete
+     */
+    where?: ShapeWhereInput
+    /**
+     * Limit how many Shapes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Shape without action
+   */
+  export type ShapeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Shape
+     */
+    select?: ShapeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Shape
+     */
+    omit?: ShapeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ShapeInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -4431,7 +5770,9 @@ export namespace Prisma {
     email: 'email',
     password: 'password',
     name: 'name',
-    photo: 'photo'
+    photo: 'photo',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -4440,7 +5781,8 @@ export namespace Prisma {
   export const RoomScalarFieldEnum: {
     id: 'id',
     slug: 'slug',
-    createdt: 'createdt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
     adminId: 'adminId'
   };
 
@@ -4451,10 +5793,24 @@ export namespace Prisma {
     id: 'id',
     roomId: 'roomId',
     message: 'message',
-    userId: 'userId'
+    userId: 'userId',
+    createdAt: 'createdAt'
   };
 
   export type ChatScalarFieldEnum = (typeof ChatScalarFieldEnum)[keyof typeof ChatScalarFieldEnum]
+
+
+  export const ShapeScalarFieldEnum: {
+    id: 'id',
+    roomId: 'roomId',
+    type: 'type',
+    data: 'data',
+    userId: 'userId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ShapeScalarFieldEnum = (typeof ShapeScalarFieldEnum)[keyof typeof ShapeScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -4463,6 +5819,13 @@ export namespace Prisma {
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
   export const QueryMode: {
@@ -4479,6 +5842,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -4501,6 +5873,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'DateTime'
+   */
+  export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+  /**
+   * Reference to a field of type 'DateTime[]'
+   */
+  export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -4515,16 +5901,16 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'DateTime'
+   * Reference to a field of type 'Json'
    */
-  export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
     
 
 
   /**
-   * Reference to a field of type 'DateTime[]'
+   * Reference to a field of type 'QueryMode'
    */
-  export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -4554,8 +5940,11 @@ export namespace Prisma {
     password?: StringFilter<"User"> | string
     name?: StringFilter<"User"> | string
     photo?: StringNullableFilter<"User"> | string | null
+    createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
     rooms?: RoomListRelationFilter
     chats?: ChatListRelationFilter
+    shapes?: ShapeListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -4564,8 +5953,11 @@ export namespace Prisma {
     password?: SortOrder
     name?: SortOrder
     photo?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     rooms?: RoomOrderByRelationAggregateInput
     chats?: ChatOrderByRelationAggregateInput
+    shapes?: ShapeOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -4577,8 +5969,11 @@ export namespace Prisma {
     password?: StringFilter<"User"> | string
     name?: StringFilter<"User"> | string
     photo?: StringNullableFilter<"User"> | string | null
+    createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
     rooms?: RoomListRelationFilter
     chats?: ChatListRelationFilter
+    shapes?: ShapeListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -4587,6 +5982,8 @@ export namespace Prisma {
     password?: SortOrder
     name?: SortOrder
     photo?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -4601,6 +5998,8 @@ export namespace Prisma {
     password?: StringWithAggregatesFilter<"User"> | string
     name?: StringWithAggregatesFilter<"User"> | string
     photo?: StringNullableWithAggregatesFilter<"User"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
   export type RoomWhereInput = {
@@ -4609,19 +6008,23 @@ export namespace Prisma {
     NOT?: RoomWhereInput | RoomWhereInput[]
     id?: IntFilter<"Room"> | number
     slug?: StringFilter<"Room"> | string
-    createdt?: DateTimeFilter<"Room"> | Date | string
+    createdAt?: DateTimeFilter<"Room"> | Date | string
+    updatedAt?: DateTimeFilter<"Room"> | Date | string
     adminId?: StringFilter<"Room"> | string
     admin?: XOR<UserScalarRelationFilter, UserWhereInput>
     chats?: ChatListRelationFilter
+    shapes?: ShapeListRelationFilter
   }
 
   export type RoomOrderByWithRelationInput = {
     id?: SortOrder
     slug?: SortOrder
-    createdt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     adminId?: SortOrder
     admin?: UserOrderByWithRelationInput
     chats?: ChatOrderByRelationAggregateInput
+    shapes?: ShapeOrderByRelationAggregateInput
   }
 
   export type RoomWhereUniqueInput = Prisma.AtLeast<{
@@ -4630,16 +6033,19 @@ export namespace Prisma {
     AND?: RoomWhereInput | RoomWhereInput[]
     OR?: RoomWhereInput[]
     NOT?: RoomWhereInput | RoomWhereInput[]
-    createdt?: DateTimeFilter<"Room"> | Date | string
+    createdAt?: DateTimeFilter<"Room"> | Date | string
+    updatedAt?: DateTimeFilter<"Room"> | Date | string
     adminId?: StringFilter<"Room"> | string
     admin?: XOR<UserScalarRelationFilter, UserWhereInput>
     chats?: ChatListRelationFilter
+    shapes?: ShapeListRelationFilter
   }, "id" | "slug">
 
   export type RoomOrderByWithAggregationInput = {
     id?: SortOrder
     slug?: SortOrder
-    createdt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     adminId?: SortOrder
     _count?: RoomCountOrderByAggregateInput
     _avg?: RoomAvgOrderByAggregateInput
@@ -4654,7 +6060,8 @@ export namespace Prisma {
     NOT?: RoomScalarWhereWithAggregatesInput | RoomScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Room"> | number
     slug?: StringWithAggregatesFilter<"Room"> | string
-    createdt?: DateTimeWithAggregatesFilter<"Room"> | Date | string
+    createdAt?: DateTimeWithAggregatesFilter<"Room"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Room"> | Date | string
     adminId?: StringWithAggregatesFilter<"Room"> | string
   }
 
@@ -4666,6 +6073,7 @@ export namespace Prisma {
     roomId?: IntFilter<"Chat"> | number
     message?: StringFilter<"Chat"> | string
     userId?: StringFilter<"Chat"> | string
+    createdAt?: DateTimeFilter<"Chat"> | Date | string
     room?: XOR<RoomScalarRelationFilter, RoomWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -4675,6 +6083,7 @@ export namespace Prisma {
     roomId?: SortOrder
     message?: SortOrder
     userId?: SortOrder
+    createdAt?: SortOrder
     room?: RoomOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
   }
@@ -4687,6 +6096,7 @@ export namespace Prisma {
     roomId?: IntFilter<"Chat"> | number
     message?: StringFilter<"Chat"> | string
     userId?: StringFilter<"Chat"> | string
+    createdAt?: DateTimeFilter<"Chat"> | Date | string
     room?: XOR<RoomScalarRelationFilter, RoomWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
@@ -4696,6 +6106,7 @@ export namespace Prisma {
     roomId?: SortOrder
     message?: SortOrder
     userId?: SortOrder
+    createdAt?: SortOrder
     _count?: ChatCountOrderByAggregateInput
     _avg?: ChatAvgOrderByAggregateInput
     _max?: ChatMaxOrderByAggregateInput
@@ -4711,6 +6122,77 @@ export namespace Prisma {
     roomId?: IntWithAggregatesFilter<"Chat"> | number
     message?: StringWithAggregatesFilter<"Chat"> | string
     userId?: StringWithAggregatesFilter<"Chat"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Chat"> | Date | string
+  }
+
+  export type ShapeWhereInput = {
+    AND?: ShapeWhereInput | ShapeWhereInput[]
+    OR?: ShapeWhereInput[]
+    NOT?: ShapeWhereInput | ShapeWhereInput[]
+    id?: StringFilter<"Shape"> | string
+    roomId?: IntFilter<"Shape"> | number
+    type?: StringFilter<"Shape"> | string
+    data?: JsonFilter<"Shape">
+    userId?: StringFilter<"Shape"> | string
+    createdAt?: DateTimeFilter<"Shape"> | Date | string
+    updatedAt?: DateTimeFilter<"Shape"> | Date | string
+    room?: XOR<RoomScalarRelationFilter, RoomWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type ShapeOrderByWithRelationInput = {
+    id?: SortOrder
+    roomId?: SortOrder
+    type?: SortOrder
+    data?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    room?: RoomOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type ShapeWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ShapeWhereInput | ShapeWhereInput[]
+    OR?: ShapeWhereInput[]
+    NOT?: ShapeWhereInput | ShapeWhereInput[]
+    roomId?: IntFilter<"Shape"> | number
+    type?: StringFilter<"Shape"> | string
+    data?: JsonFilter<"Shape">
+    userId?: StringFilter<"Shape"> | string
+    createdAt?: DateTimeFilter<"Shape"> | Date | string
+    updatedAt?: DateTimeFilter<"Shape"> | Date | string
+    room?: XOR<RoomScalarRelationFilter, RoomWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type ShapeOrderByWithAggregationInput = {
+    id?: SortOrder
+    roomId?: SortOrder
+    type?: SortOrder
+    data?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ShapeCountOrderByAggregateInput
+    _avg?: ShapeAvgOrderByAggregateInput
+    _max?: ShapeMaxOrderByAggregateInput
+    _min?: ShapeMinOrderByAggregateInput
+    _sum?: ShapeSumOrderByAggregateInput
+  }
+
+  export type ShapeScalarWhereWithAggregatesInput = {
+    AND?: ShapeScalarWhereWithAggregatesInput | ShapeScalarWhereWithAggregatesInput[]
+    OR?: ShapeScalarWhereWithAggregatesInput[]
+    NOT?: ShapeScalarWhereWithAggregatesInput | ShapeScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Shape"> | string
+    roomId?: IntWithAggregatesFilter<"Shape"> | number
+    type?: StringWithAggregatesFilter<"Shape"> | string
+    data?: JsonWithAggregatesFilter<"Shape">
+    userId?: StringWithAggregatesFilter<"Shape"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Shape"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Shape"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -4719,8 +6201,11 @@ export namespace Prisma {
     password: string
     name: string
     photo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     rooms?: RoomCreateNestedManyWithoutAdminInput
     chats?: ChatCreateNestedManyWithoutUserInput
+    shapes?: ShapeCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -4729,8 +6214,11 @@ export namespace Prisma {
     password: string
     name: string
     photo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     rooms?: RoomUncheckedCreateNestedManyWithoutAdminInput
     chats?: ChatUncheckedCreateNestedManyWithoutUserInput
+    shapes?: ShapeUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -4739,8 +6227,11 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     photo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rooms?: RoomUpdateManyWithoutAdminNestedInput
     chats?: ChatUpdateManyWithoutUserNestedInput
+    shapes?: ShapeUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -4749,8 +6240,11 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     photo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rooms?: RoomUncheckedUpdateManyWithoutAdminNestedInput
     chats?: ChatUncheckedUpdateManyWithoutUserNestedInput
+    shapes?: ShapeUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -4759,6 +6253,8 @@ export namespace Prisma {
     password: string
     name: string
     photo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type UserUpdateManyMutationInput = {
@@ -4767,6 +6263,8 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     photo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -4775,59 +6273,73 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     photo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RoomCreateInput = {
     slug: string
-    createdt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
     admin: UserCreateNestedOneWithoutRoomsInput
     chats?: ChatCreateNestedManyWithoutRoomInput
+    shapes?: ShapeCreateNestedManyWithoutRoomInput
   }
 
   export type RoomUncheckedCreateInput = {
     id?: number
     slug: string
-    createdt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
     adminId: string
     chats?: ChatUncheckedCreateNestedManyWithoutRoomInput
+    shapes?: ShapeUncheckedCreateNestedManyWithoutRoomInput
   }
 
   export type RoomUpdateInput = {
     slug?: StringFieldUpdateOperationsInput | string
-    createdt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admin?: UserUpdateOneRequiredWithoutRoomsNestedInput
     chats?: ChatUpdateManyWithoutRoomNestedInput
+    shapes?: ShapeUpdateManyWithoutRoomNestedInput
   }
 
   export type RoomUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     slug?: StringFieldUpdateOperationsInput | string
-    createdt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     adminId?: StringFieldUpdateOperationsInput | string
     chats?: ChatUncheckedUpdateManyWithoutRoomNestedInput
+    shapes?: ShapeUncheckedUpdateManyWithoutRoomNestedInput
   }
 
   export type RoomCreateManyInput = {
     id?: number
     slug: string
-    createdt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
     adminId: string
   }
 
   export type RoomUpdateManyMutationInput = {
     slug?: StringFieldUpdateOperationsInput | string
-    createdt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RoomUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     slug?: StringFieldUpdateOperationsInput | string
-    createdt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     adminId?: StringFieldUpdateOperationsInput | string
   }
 
   export type ChatCreateInput = {
     message: string
+    createdAt?: Date | string
     room: RoomCreateNestedOneWithoutChatsInput
     user: UserCreateNestedOneWithoutChatsInput
   }
@@ -4837,10 +6349,12 @@ export namespace Prisma {
     roomId: number
     message: string
     userId: string
+    createdAt?: Date | string
   }
 
   export type ChatUpdateInput = {
     message?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     room?: RoomUpdateOneRequiredWithoutChatsNestedInput
     user?: UserUpdateOneRequiredWithoutChatsNestedInput
   }
@@ -4850,6 +6364,7 @@ export namespace Prisma {
     roomId?: IntFieldUpdateOperationsInput | number
     message?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ChatCreateManyInput = {
@@ -4857,10 +6372,12 @@ export namespace Prisma {
     roomId: number
     message: string
     userId: string
+    createdAt?: Date | string
   }
 
   export type ChatUpdateManyMutationInput = {
     message?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ChatUncheckedUpdateManyInput = {
@@ -4868,6 +6385,75 @@ export namespace Prisma {
     roomId?: IntFieldUpdateOperationsInput | number
     message?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShapeCreateInput = {
+    id: string
+    type: string
+    data: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    room: RoomCreateNestedOneWithoutShapesInput
+    user: UserCreateNestedOneWithoutShapesInput
+  }
+
+  export type ShapeUncheckedCreateInput = {
+    id: string
+    roomId: number
+    type: string
+    data: JsonNullValueInput | InputJsonValue
+    userId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ShapeUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    data?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    room?: RoomUpdateOneRequiredWithoutShapesNestedInput
+    user?: UserUpdateOneRequiredWithoutShapesNestedInput
+  }
+
+  export type ShapeUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    roomId?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    data?: JsonNullValueInput | InputJsonValue
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShapeCreateManyInput = {
+    id: string
+    roomId: number
+    type: string
+    data: JsonNullValueInput | InputJsonValue
+    userId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ShapeUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    data?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShapeUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    roomId?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    data?: JsonNullValueInput | InputJsonValue
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -4900,6 +6486,17 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
   export type RoomListRelationFilter = {
     every?: RoomWhereInput
     some?: RoomWhereInput
@@ -4910,6 +6507,12 @@ export namespace Prisma {
     every?: ChatWhereInput
     some?: ChatWhereInput
     none?: ChatWhereInput
+  }
+
+  export type ShapeListRelationFilter = {
+    every?: ShapeWhereInput
+    some?: ShapeWhereInput
+    none?: ShapeWhereInput
   }
 
   export type SortOrderInput = {
@@ -4925,12 +6528,18 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type ShapeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
     password?: SortOrder
     name?: SortOrder
     photo?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -4939,6 +6548,8 @@ export namespace Prisma {
     password?: SortOrder
     name?: SortOrder
     photo?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -4947,6 +6558,8 @@ export namespace Prisma {
     password?: SortOrder
     name?: SortOrder
     photo?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -4985,6 +6598,20 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -4996,17 +6623,6 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
@@ -5015,7 +6631,8 @@ export namespace Prisma {
   export type RoomCountOrderByAggregateInput = {
     id?: SortOrder
     slug?: SortOrder
-    createdt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     adminId?: SortOrder
   }
 
@@ -5026,14 +6643,16 @@ export namespace Prisma {
   export type RoomMaxOrderByAggregateInput = {
     id?: SortOrder
     slug?: SortOrder
-    createdt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     adminId?: SortOrder
   }
 
   export type RoomMinOrderByAggregateInput = {
     id?: SortOrder
     slug?: SortOrder
-    createdt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     adminId?: SortOrder
   }
 
@@ -5057,20 +6676,6 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
   export type RoomScalarRelationFilter = {
     is?: RoomWhereInput
     isNot?: RoomWhereInput
@@ -5081,6 +6686,7 @@ export namespace Prisma {
     roomId?: SortOrder
     message?: SortOrder
     userId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type ChatAvgOrderByAggregateInput = {
@@ -5093,6 +6699,7 @@ export namespace Prisma {
     roomId?: SortOrder
     message?: SortOrder
     userId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type ChatMinOrderByAggregateInput = {
@@ -5100,11 +6707,97 @@ export namespace Prisma {
     roomId?: SortOrder
     message?: SortOrder
     userId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type ChatSumOrderByAggregateInput = {
     id?: SortOrder
     roomId?: SortOrder
+  }
+  export type JsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type ShapeCountOrderByAggregateInput = {
+    id?: SortOrder
+    roomId?: SortOrder
+    type?: SortOrder
+    data?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ShapeAvgOrderByAggregateInput = {
+    roomId?: SortOrder
+  }
+
+  export type ShapeMaxOrderByAggregateInput = {
+    id?: SortOrder
+    roomId?: SortOrder
+    type?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ShapeMinOrderByAggregateInput = {
+    id?: SortOrder
+    roomId?: SortOrder
+    type?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ShapeSumOrderByAggregateInput = {
+    roomId?: SortOrder
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
   }
 
   export type RoomCreateNestedManyWithoutAdminInput = {
@@ -5121,6 +6814,13 @@ export namespace Prisma {
     connect?: ChatWhereUniqueInput | ChatWhereUniqueInput[]
   }
 
+  export type ShapeCreateNestedManyWithoutUserInput = {
+    create?: XOR<ShapeCreateWithoutUserInput, ShapeUncheckedCreateWithoutUserInput> | ShapeCreateWithoutUserInput[] | ShapeUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ShapeCreateOrConnectWithoutUserInput | ShapeCreateOrConnectWithoutUserInput[]
+    createMany?: ShapeCreateManyUserInputEnvelope
+    connect?: ShapeWhereUniqueInput | ShapeWhereUniqueInput[]
+  }
+
   export type RoomUncheckedCreateNestedManyWithoutAdminInput = {
     create?: XOR<RoomCreateWithoutAdminInput, RoomUncheckedCreateWithoutAdminInput> | RoomCreateWithoutAdminInput[] | RoomUncheckedCreateWithoutAdminInput[]
     connectOrCreate?: RoomCreateOrConnectWithoutAdminInput | RoomCreateOrConnectWithoutAdminInput[]
@@ -5135,12 +6835,23 @@ export namespace Prisma {
     connect?: ChatWhereUniqueInput | ChatWhereUniqueInput[]
   }
 
+  export type ShapeUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ShapeCreateWithoutUserInput, ShapeUncheckedCreateWithoutUserInput> | ShapeCreateWithoutUserInput[] | ShapeUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ShapeCreateOrConnectWithoutUserInput | ShapeCreateOrConnectWithoutUserInput[]
+    createMany?: ShapeCreateManyUserInputEnvelope
+    connect?: ShapeWhereUniqueInput | ShapeWhereUniqueInput[]
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
   }
 
   export type RoomUpdateManyWithoutAdminNestedInput = {
@@ -5171,6 +6882,20 @@ export namespace Prisma {
     deleteMany?: ChatScalarWhereInput | ChatScalarWhereInput[]
   }
 
+  export type ShapeUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ShapeCreateWithoutUserInput, ShapeUncheckedCreateWithoutUserInput> | ShapeCreateWithoutUserInput[] | ShapeUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ShapeCreateOrConnectWithoutUserInput | ShapeCreateOrConnectWithoutUserInput[]
+    upsert?: ShapeUpsertWithWhereUniqueWithoutUserInput | ShapeUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ShapeCreateManyUserInputEnvelope
+    set?: ShapeWhereUniqueInput | ShapeWhereUniqueInput[]
+    disconnect?: ShapeWhereUniqueInput | ShapeWhereUniqueInput[]
+    delete?: ShapeWhereUniqueInput | ShapeWhereUniqueInput[]
+    connect?: ShapeWhereUniqueInput | ShapeWhereUniqueInput[]
+    update?: ShapeUpdateWithWhereUniqueWithoutUserInput | ShapeUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ShapeUpdateManyWithWhereWithoutUserInput | ShapeUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ShapeScalarWhereInput | ShapeScalarWhereInput[]
+  }
+
   export type RoomUncheckedUpdateManyWithoutAdminNestedInput = {
     create?: XOR<RoomCreateWithoutAdminInput, RoomUncheckedCreateWithoutAdminInput> | RoomCreateWithoutAdminInput[] | RoomUncheckedCreateWithoutAdminInput[]
     connectOrCreate?: RoomCreateOrConnectWithoutAdminInput | RoomCreateOrConnectWithoutAdminInput[]
@@ -5199,6 +6924,20 @@ export namespace Prisma {
     deleteMany?: ChatScalarWhereInput | ChatScalarWhereInput[]
   }
 
+  export type ShapeUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ShapeCreateWithoutUserInput, ShapeUncheckedCreateWithoutUserInput> | ShapeCreateWithoutUserInput[] | ShapeUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ShapeCreateOrConnectWithoutUserInput | ShapeCreateOrConnectWithoutUserInput[]
+    upsert?: ShapeUpsertWithWhereUniqueWithoutUserInput | ShapeUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ShapeCreateManyUserInputEnvelope
+    set?: ShapeWhereUniqueInput | ShapeWhereUniqueInput[]
+    disconnect?: ShapeWhereUniqueInput | ShapeWhereUniqueInput[]
+    delete?: ShapeWhereUniqueInput | ShapeWhereUniqueInput[]
+    connect?: ShapeWhereUniqueInput | ShapeWhereUniqueInput[]
+    update?: ShapeUpdateWithWhereUniqueWithoutUserInput | ShapeUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ShapeUpdateManyWithWhereWithoutUserInput | ShapeUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ShapeScalarWhereInput | ShapeScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutRoomsInput = {
     create?: XOR<UserCreateWithoutRoomsInput, UserUncheckedCreateWithoutRoomsInput>
     connectOrCreate?: UserCreateOrConnectWithoutRoomsInput
@@ -5212,6 +6951,13 @@ export namespace Prisma {
     connect?: ChatWhereUniqueInput | ChatWhereUniqueInput[]
   }
 
+  export type ShapeCreateNestedManyWithoutRoomInput = {
+    create?: XOR<ShapeCreateWithoutRoomInput, ShapeUncheckedCreateWithoutRoomInput> | ShapeCreateWithoutRoomInput[] | ShapeUncheckedCreateWithoutRoomInput[]
+    connectOrCreate?: ShapeCreateOrConnectWithoutRoomInput | ShapeCreateOrConnectWithoutRoomInput[]
+    createMany?: ShapeCreateManyRoomInputEnvelope
+    connect?: ShapeWhereUniqueInput | ShapeWhereUniqueInput[]
+  }
+
   export type ChatUncheckedCreateNestedManyWithoutRoomInput = {
     create?: XOR<ChatCreateWithoutRoomInput, ChatUncheckedCreateWithoutRoomInput> | ChatCreateWithoutRoomInput[] | ChatUncheckedCreateWithoutRoomInput[]
     connectOrCreate?: ChatCreateOrConnectWithoutRoomInput | ChatCreateOrConnectWithoutRoomInput[]
@@ -5219,8 +6965,11 @@ export namespace Prisma {
     connect?: ChatWhereUniqueInput | ChatWhereUniqueInput[]
   }
 
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
+  export type ShapeUncheckedCreateNestedManyWithoutRoomInput = {
+    create?: XOR<ShapeCreateWithoutRoomInput, ShapeUncheckedCreateWithoutRoomInput> | ShapeCreateWithoutRoomInput[] | ShapeUncheckedCreateWithoutRoomInput[]
+    connectOrCreate?: ShapeCreateOrConnectWithoutRoomInput | ShapeCreateOrConnectWithoutRoomInput[]
+    createMany?: ShapeCreateManyRoomInputEnvelope
+    connect?: ShapeWhereUniqueInput | ShapeWhereUniqueInput[]
   }
 
   export type UserUpdateOneRequiredWithoutRoomsNestedInput = {
@@ -5245,6 +6994,20 @@ export namespace Prisma {
     deleteMany?: ChatScalarWhereInput | ChatScalarWhereInput[]
   }
 
+  export type ShapeUpdateManyWithoutRoomNestedInput = {
+    create?: XOR<ShapeCreateWithoutRoomInput, ShapeUncheckedCreateWithoutRoomInput> | ShapeCreateWithoutRoomInput[] | ShapeUncheckedCreateWithoutRoomInput[]
+    connectOrCreate?: ShapeCreateOrConnectWithoutRoomInput | ShapeCreateOrConnectWithoutRoomInput[]
+    upsert?: ShapeUpsertWithWhereUniqueWithoutRoomInput | ShapeUpsertWithWhereUniqueWithoutRoomInput[]
+    createMany?: ShapeCreateManyRoomInputEnvelope
+    set?: ShapeWhereUniqueInput | ShapeWhereUniqueInput[]
+    disconnect?: ShapeWhereUniqueInput | ShapeWhereUniqueInput[]
+    delete?: ShapeWhereUniqueInput | ShapeWhereUniqueInput[]
+    connect?: ShapeWhereUniqueInput | ShapeWhereUniqueInput[]
+    update?: ShapeUpdateWithWhereUniqueWithoutRoomInput | ShapeUpdateWithWhereUniqueWithoutRoomInput[]
+    updateMany?: ShapeUpdateManyWithWhereWithoutRoomInput | ShapeUpdateManyWithWhereWithoutRoomInput[]
+    deleteMany?: ShapeScalarWhereInput | ShapeScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -5265,6 +7028,20 @@ export namespace Prisma {
     update?: ChatUpdateWithWhereUniqueWithoutRoomInput | ChatUpdateWithWhereUniqueWithoutRoomInput[]
     updateMany?: ChatUpdateManyWithWhereWithoutRoomInput | ChatUpdateManyWithWhereWithoutRoomInput[]
     deleteMany?: ChatScalarWhereInput | ChatScalarWhereInput[]
+  }
+
+  export type ShapeUncheckedUpdateManyWithoutRoomNestedInput = {
+    create?: XOR<ShapeCreateWithoutRoomInput, ShapeUncheckedCreateWithoutRoomInput> | ShapeCreateWithoutRoomInput[] | ShapeUncheckedCreateWithoutRoomInput[]
+    connectOrCreate?: ShapeCreateOrConnectWithoutRoomInput | ShapeCreateOrConnectWithoutRoomInput[]
+    upsert?: ShapeUpsertWithWhereUniqueWithoutRoomInput | ShapeUpsertWithWhereUniqueWithoutRoomInput[]
+    createMany?: ShapeCreateManyRoomInputEnvelope
+    set?: ShapeWhereUniqueInput | ShapeWhereUniqueInput[]
+    disconnect?: ShapeWhereUniqueInput | ShapeWhereUniqueInput[]
+    delete?: ShapeWhereUniqueInput | ShapeWhereUniqueInput[]
+    connect?: ShapeWhereUniqueInput | ShapeWhereUniqueInput[]
+    update?: ShapeUpdateWithWhereUniqueWithoutRoomInput | ShapeUpdateWithWhereUniqueWithoutRoomInput[]
+    updateMany?: ShapeUpdateManyWithWhereWithoutRoomInput | ShapeUpdateManyWithWhereWithoutRoomInput[]
+    deleteMany?: ShapeScalarWhereInput | ShapeScalarWhereInput[]
   }
 
   export type RoomCreateNestedOneWithoutChatsInput = {
@@ -5295,6 +7072,34 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutChatsInput, UserUpdateWithoutChatsInput>, UserUncheckedUpdateWithoutChatsInput>
   }
 
+  export type RoomCreateNestedOneWithoutShapesInput = {
+    create?: XOR<RoomCreateWithoutShapesInput, RoomUncheckedCreateWithoutShapesInput>
+    connectOrCreate?: RoomCreateOrConnectWithoutShapesInput
+    connect?: RoomWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutShapesInput = {
+    create?: XOR<UserCreateWithoutShapesInput, UserUncheckedCreateWithoutShapesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutShapesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type RoomUpdateOneRequiredWithoutShapesNestedInput = {
+    create?: XOR<RoomCreateWithoutShapesInput, RoomUncheckedCreateWithoutShapesInput>
+    connectOrCreate?: RoomCreateOrConnectWithoutShapesInput
+    upsert?: RoomUpsertWithoutShapesInput
+    connect?: RoomWhereUniqueInput
+    update?: XOR<XOR<RoomUpdateToOneWithWhereWithoutShapesInput, RoomUpdateWithoutShapesInput>, RoomUncheckedUpdateWithoutShapesInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutShapesNestedInput = {
+    create?: XOR<UserCreateWithoutShapesInput, UserUncheckedCreateWithoutShapesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutShapesInput
+    upsert?: UserUpsertWithoutShapesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutShapesInput, UserUpdateWithoutShapesInput>, UserUncheckedUpdateWithoutShapesInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -5321,6 +7126,17 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedDateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -5379,7 +7195,7 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedDateTimeFilter<$PrismaModel = never> = {
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
     notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -5387,7 +7203,10 @@ export namespace Prisma {
     lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -5416,32 +7235,45 @@ export namespace Prisma {
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
   }
+  export type NestedJsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
 
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
+  export type NestedJsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type RoomCreateWithoutAdminInput = {
     slug: string
-    createdt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
     chats?: ChatCreateNestedManyWithoutRoomInput
+    shapes?: ShapeCreateNestedManyWithoutRoomInput
   }
 
   export type RoomUncheckedCreateWithoutAdminInput = {
     id?: number
     slug: string
-    createdt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
     chats?: ChatUncheckedCreateNestedManyWithoutRoomInput
+    shapes?: ShapeUncheckedCreateNestedManyWithoutRoomInput
   }
 
   export type RoomCreateOrConnectWithoutAdminInput = {
@@ -5456,6 +7288,7 @@ export namespace Prisma {
 
   export type ChatCreateWithoutUserInput = {
     message: string
+    createdAt?: Date | string
     room: RoomCreateNestedOneWithoutChatsInput
   }
 
@@ -5463,6 +7296,7 @@ export namespace Prisma {
     id?: number
     roomId: number
     message: string
+    createdAt?: Date | string
   }
 
   export type ChatCreateOrConnectWithoutUserInput = {
@@ -5472,6 +7306,34 @@ export namespace Prisma {
 
   export type ChatCreateManyUserInputEnvelope = {
     data: ChatCreateManyUserInput | ChatCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ShapeCreateWithoutUserInput = {
+    id: string
+    type: string
+    data: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    room: RoomCreateNestedOneWithoutShapesInput
+  }
+
+  export type ShapeUncheckedCreateWithoutUserInput = {
+    id: string
+    roomId: number
+    type: string
+    data: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ShapeCreateOrConnectWithoutUserInput = {
+    where: ShapeWhereUniqueInput
+    create: XOR<ShapeCreateWithoutUserInput, ShapeUncheckedCreateWithoutUserInput>
+  }
+
+  export type ShapeCreateManyUserInputEnvelope = {
+    data: ShapeCreateManyUserInput | ShapeCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -5497,7 +7359,8 @@ export namespace Prisma {
     NOT?: RoomScalarWhereInput | RoomScalarWhereInput[]
     id?: IntFilter<"Room"> | number
     slug?: StringFilter<"Room"> | string
-    createdt?: DateTimeFilter<"Room"> | Date | string
+    createdAt?: DateTimeFilter<"Room"> | Date | string
+    updatedAt?: DateTimeFilter<"Room"> | Date | string
     adminId?: StringFilter<"Room"> | string
   }
 
@@ -5525,6 +7388,36 @@ export namespace Prisma {
     roomId?: IntFilter<"Chat"> | number
     message?: StringFilter<"Chat"> | string
     userId?: StringFilter<"Chat"> | string
+    createdAt?: DateTimeFilter<"Chat"> | Date | string
+  }
+
+  export type ShapeUpsertWithWhereUniqueWithoutUserInput = {
+    where: ShapeWhereUniqueInput
+    update: XOR<ShapeUpdateWithoutUserInput, ShapeUncheckedUpdateWithoutUserInput>
+    create: XOR<ShapeCreateWithoutUserInput, ShapeUncheckedCreateWithoutUserInput>
+  }
+
+  export type ShapeUpdateWithWhereUniqueWithoutUserInput = {
+    where: ShapeWhereUniqueInput
+    data: XOR<ShapeUpdateWithoutUserInput, ShapeUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ShapeUpdateManyWithWhereWithoutUserInput = {
+    where: ShapeScalarWhereInput
+    data: XOR<ShapeUpdateManyMutationInput, ShapeUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ShapeScalarWhereInput = {
+    AND?: ShapeScalarWhereInput | ShapeScalarWhereInput[]
+    OR?: ShapeScalarWhereInput[]
+    NOT?: ShapeScalarWhereInput | ShapeScalarWhereInput[]
+    id?: StringFilter<"Shape"> | string
+    roomId?: IntFilter<"Shape"> | number
+    type?: StringFilter<"Shape"> | string
+    data?: JsonFilter<"Shape">
+    userId?: StringFilter<"Shape"> | string
+    createdAt?: DateTimeFilter<"Shape"> | Date | string
+    updatedAt?: DateTimeFilter<"Shape"> | Date | string
   }
 
   export type UserCreateWithoutRoomsInput = {
@@ -5533,7 +7426,10 @@ export namespace Prisma {
     password: string
     name: string
     photo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     chats?: ChatCreateNestedManyWithoutUserInput
+    shapes?: ShapeCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRoomsInput = {
@@ -5542,7 +7438,10 @@ export namespace Prisma {
     password: string
     name: string
     photo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     chats?: ChatUncheckedCreateNestedManyWithoutUserInput
+    shapes?: ShapeUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRoomsInput = {
@@ -5552,6 +7451,7 @@ export namespace Prisma {
 
   export type ChatCreateWithoutRoomInput = {
     message: string
+    createdAt?: Date | string
     user: UserCreateNestedOneWithoutChatsInput
   }
 
@@ -5559,6 +7459,7 @@ export namespace Prisma {
     id?: number
     message: string
     userId: string
+    createdAt?: Date | string
   }
 
   export type ChatCreateOrConnectWithoutRoomInput = {
@@ -5568,6 +7469,34 @@ export namespace Prisma {
 
   export type ChatCreateManyRoomInputEnvelope = {
     data: ChatCreateManyRoomInput | ChatCreateManyRoomInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ShapeCreateWithoutRoomInput = {
+    id: string
+    type: string
+    data: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutShapesInput
+  }
+
+  export type ShapeUncheckedCreateWithoutRoomInput = {
+    id: string
+    type: string
+    data: JsonNullValueInput | InputJsonValue
+    userId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ShapeCreateOrConnectWithoutRoomInput = {
+    where: ShapeWhereUniqueInput
+    create: XOR<ShapeCreateWithoutRoomInput, ShapeUncheckedCreateWithoutRoomInput>
+  }
+
+  export type ShapeCreateManyRoomInputEnvelope = {
+    data: ShapeCreateManyRoomInput | ShapeCreateManyRoomInput[]
     skipDuplicates?: boolean
   }
 
@@ -5588,7 +7517,10 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     photo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chats?: ChatUpdateManyWithoutUserNestedInput
+    shapes?: ShapeUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRoomsInput = {
@@ -5597,7 +7529,10 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     photo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chats?: ChatUncheckedUpdateManyWithoutUserNestedInput
+    shapes?: ShapeUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ChatUpsertWithWhereUniqueWithoutRoomInput = {
@@ -5616,17 +7551,37 @@ export namespace Prisma {
     data: XOR<ChatUpdateManyMutationInput, ChatUncheckedUpdateManyWithoutRoomInput>
   }
 
+  export type ShapeUpsertWithWhereUniqueWithoutRoomInput = {
+    where: ShapeWhereUniqueInput
+    update: XOR<ShapeUpdateWithoutRoomInput, ShapeUncheckedUpdateWithoutRoomInput>
+    create: XOR<ShapeCreateWithoutRoomInput, ShapeUncheckedCreateWithoutRoomInput>
+  }
+
+  export type ShapeUpdateWithWhereUniqueWithoutRoomInput = {
+    where: ShapeWhereUniqueInput
+    data: XOR<ShapeUpdateWithoutRoomInput, ShapeUncheckedUpdateWithoutRoomInput>
+  }
+
+  export type ShapeUpdateManyWithWhereWithoutRoomInput = {
+    where: ShapeScalarWhereInput
+    data: XOR<ShapeUpdateManyMutationInput, ShapeUncheckedUpdateManyWithoutRoomInput>
+  }
+
   export type RoomCreateWithoutChatsInput = {
     slug: string
-    createdt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
     admin: UserCreateNestedOneWithoutRoomsInput
+    shapes?: ShapeCreateNestedManyWithoutRoomInput
   }
 
   export type RoomUncheckedCreateWithoutChatsInput = {
     id?: number
     slug: string
-    createdt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
     adminId: string
+    shapes?: ShapeUncheckedCreateNestedManyWithoutRoomInput
   }
 
   export type RoomCreateOrConnectWithoutChatsInput = {
@@ -5640,7 +7595,10 @@ export namespace Prisma {
     password: string
     name: string
     photo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     rooms?: RoomCreateNestedManyWithoutAdminInput
+    shapes?: ShapeCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutChatsInput = {
@@ -5649,7 +7607,10 @@ export namespace Prisma {
     password: string
     name: string
     photo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     rooms?: RoomUncheckedCreateNestedManyWithoutAdminInput
+    shapes?: ShapeUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutChatsInput = {
@@ -5670,15 +7631,19 @@ export namespace Prisma {
 
   export type RoomUpdateWithoutChatsInput = {
     slug?: StringFieldUpdateOperationsInput | string
-    createdt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     admin?: UserUpdateOneRequiredWithoutRoomsNestedInput
+    shapes?: ShapeUpdateManyWithoutRoomNestedInput
   }
 
   export type RoomUncheckedUpdateWithoutChatsInput = {
     id?: IntFieldUpdateOperationsInput | number
     slug?: StringFieldUpdateOperationsInput | string
-    createdt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     adminId?: StringFieldUpdateOperationsInput | string
+    shapes?: ShapeUncheckedUpdateManyWithoutRoomNestedInput
   }
 
   export type UserUpsertWithoutChatsInput = {
@@ -5698,7 +7663,10 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     photo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rooms?: RoomUpdateManyWithoutAdminNestedInput
+    shapes?: ShapeUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutChatsInput = {
@@ -5707,42 +7675,176 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     photo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     rooms?: RoomUncheckedUpdateManyWithoutAdminNestedInput
+    shapes?: ShapeUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type RoomCreateWithoutShapesInput = {
+    slug: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    admin: UserCreateNestedOneWithoutRoomsInput
+    chats?: ChatCreateNestedManyWithoutRoomInput
+  }
+
+  export type RoomUncheckedCreateWithoutShapesInput = {
+    id?: number
+    slug: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    adminId: string
+    chats?: ChatUncheckedCreateNestedManyWithoutRoomInput
+  }
+
+  export type RoomCreateOrConnectWithoutShapesInput = {
+    where: RoomWhereUniqueInput
+    create: XOR<RoomCreateWithoutShapesInput, RoomUncheckedCreateWithoutShapesInput>
+  }
+
+  export type UserCreateWithoutShapesInput = {
+    id?: string
+    email: string
+    password: string
+    name: string
+    photo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    rooms?: RoomCreateNestedManyWithoutAdminInput
+    chats?: ChatCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutShapesInput = {
+    id?: string
+    email: string
+    password: string
+    name: string
+    photo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    rooms?: RoomUncheckedCreateNestedManyWithoutAdminInput
+    chats?: ChatUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutShapesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutShapesInput, UserUncheckedCreateWithoutShapesInput>
+  }
+
+  export type RoomUpsertWithoutShapesInput = {
+    update: XOR<RoomUpdateWithoutShapesInput, RoomUncheckedUpdateWithoutShapesInput>
+    create: XOR<RoomCreateWithoutShapesInput, RoomUncheckedCreateWithoutShapesInput>
+    where?: RoomWhereInput
+  }
+
+  export type RoomUpdateToOneWithWhereWithoutShapesInput = {
+    where?: RoomWhereInput
+    data: XOR<RoomUpdateWithoutShapesInput, RoomUncheckedUpdateWithoutShapesInput>
+  }
+
+  export type RoomUpdateWithoutShapesInput = {
+    slug?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin?: UserUpdateOneRequiredWithoutRoomsNestedInput
+    chats?: ChatUpdateManyWithoutRoomNestedInput
+  }
+
+  export type RoomUncheckedUpdateWithoutShapesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    slug?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adminId?: StringFieldUpdateOperationsInput | string
+    chats?: ChatUncheckedUpdateManyWithoutRoomNestedInput
+  }
+
+  export type UserUpsertWithoutShapesInput = {
+    update: XOR<UserUpdateWithoutShapesInput, UserUncheckedUpdateWithoutShapesInput>
+    create: XOR<UserCreateWithoutShapesInput, UserUncheckedCreateWithoutShapesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutShapesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutShapesInput, UserUncheckedUpdateWithoutShapesInput>
+  }
+
+  export type UserUpdateWithoutShapesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rooms?: RoomUpdateManyWithoutAdminNestedInput
+    chats?: ChatUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutShapesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rooms?: RoomUncheckedUpdateManyWithoutAdminNestedInput
+    chats?: ChatUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RoomCreateManyAdminInput = {
     id?: number
     slug: string
-    createdt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ChatCreateManyUserInput = {
     id?: number
     roomId: number
     message: string
+    createdAt?: Date | string
+  }
+
+  export type ShapeCreateManyUserInput = {
+    id: string
+    roomId: number
+    type: string
+    data: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type RoomUpdateWithoutAdminInput = {
     slug?: StringFieldUpdateOperationsInput | string
-    createdt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chats?: ChatUpdateManyWithoutRoomNestedInput
+    shapes?: ShapeUpdateManyWithoutRoomNestedInput
   }
 
   export type RoomUncheckedUpdateWithoutAdminInput = {
     id?: IntFieldUpdateOperationsInput | number
     slug?: StringFieldUpdateOperationsInput | string
-    createdt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chats?: ChatUncheckedUpdateManyWithoutRoomNestedInput
+    shapes?: ShapeUncheckedUpdateManyWithoutRoomNestedInput
   }
 
   export type RoomUncheckedUpdateManyWithoutAdminInput = {
     id?: IntFieldUpdateOperationsInput | number
     slug?: StringFieldUpdateOperationsInput | string
-    createdt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ChatUpdateWithoutUserInput = {
     message?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     room?: RoomUpdateOneRequiredWithoutChatsNestedInput
   }
 
@@ -5750,22 +7852,62 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     roomId?: IntFieldUpdateOperationsInput | number
     message?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ChatUncheckedUpdateManyWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
     roomId?: IntFieldUpdateOperationsInput | number
     message?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShapeUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    data?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    room?: RoomUpdateOneRequiredWithoutShapesNestedInput
+  }
+
+  export type ShapeUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    roomId?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    data?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShapeUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    roomId?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    data?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ChatCreateManyRoomInput = {
     id?: number
     message: string
     userId: string
+    createdAt?: Date | string
+  }
+
+  export type ShapeCreateManyRoomInput = {
+    id: string
+    type: string
+    data: JsonNullValueInput | InputJsonValue
+    userId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ChatUpdateWithoutRoomInput = {
     message?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutChatsNestedInput
   }
 
@@ -5773,12 +7915,41 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     message?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ChatUncheckedUpdateManyWithoutRoomInput = {
     id?: IntFieldUpdateOperationsInput | number
     message?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShapeUpdateWithoutRoomInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    data?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutShapesNestedInput
+  }
+
+  export type ShapeUncheckedUpdateWithoutRoomInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    data?: JsonNullValueInput | InputJsonValue
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShapeUncheckedUpdateManyWithoutRoomInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    data?: JsonNullValueInput | InputJsonValue
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

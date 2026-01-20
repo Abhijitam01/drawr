@@ -93,13 +93,51 @@ wss.on("connection", async (ws, request) => {
       const roomId = parsedData.roomId;
       const message = parsedData.message;
 
-      await prismaClient.chat.create({
-        data: {
-          roomId: Number(roomId),
-          message,
-          userId,
-        },
-      });
+      try {
+        const messageData = JSON.parse(message);
+        if (messageData.shape) {
+          const shape = messageData.shape;
+          await prismaClient.shape.upsert({
+            where: { id: shape.id },
+            update: {
+              type: shape.type,
+              data: shape as any,
+            },
+            create: {
+              id: shape.id,
+              roomId: Number(roomId),
+              type: shape.type,
+              data: shape as any,
+              userId,
+            },
+          });
+        } else if (messageData.type === "update") {
+          const shape = messageData.shape;
+          await prismaClient.shape.update({
+            where: { id: shape.id },
+            data: {
+              type: shape.type,
+              data: shape as any,
+            },
+          });
+        } else if (messageData.type === "delete") {
+          await prismaClient.shape.delete({
+            where: { id: messageData.id },
+          });
+        } else if (messageData.type === "clear") {
+          await prismaClient.shape.deleteMany({
+            where: { roomId: Number(roomId) },
+          });
+        }
+      } catch (e) {
+        await prismaClient.chat.create({
+          data: {
+            roomId: Number(roomId),
+            message,
+            userId,
+          },
+        });
+      }
 
       users.forEach((user) => {
         if (user.rooms.includes(roomId)) {

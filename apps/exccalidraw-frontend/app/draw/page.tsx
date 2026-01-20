@@ -991,26 +991,13 @@ function clearCanvas(
 
 async function getExistingShapes(roomId: string) {
   try {
-    const res = await axios.get(`${HTTP_BACKEND}/chats/${roomId}`);
-    const messages = res.data.messages;
-    return messages.reduce((acc: Shape[], x: { message: string }) => {
-      const messageData = JSON.parse(x.message);
-      if (messageData.type === "clear") return [];
-      if (messageData.type === "delete")
-        return acc.filter((s) => s.id !== messageData.id);
-      if (messageData.type === "update")
-        return acc.map((s) =>
-          s.id === messageData.shape.id ? messageData.shape : s
-        );
-      if (messageData.shape) acc.push(messageData.shape);
-      return acc;
-    }, []);
+    const res = await axios.get(`${HTTP_BACKEND}/shapes/${roomId}`);
+    return res.data.shapes.map((s: { data: Shape }) => s.data);
   } catch (e) {
-    console.error("Failed to fetch shapes", e);
+    console.error("Failed to fetch existing shapes", e);
     return [];
   }
 }
-
 function getHandles(s: Shape): { id: string; x: number; y: number }[] {
   if (s.type === "rect" || s.type === "diamond") {
     return [
