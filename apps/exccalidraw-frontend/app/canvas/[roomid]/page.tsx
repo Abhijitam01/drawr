@@ -1,11 +1,11 @@
 import Link from "next/link";
 
-export default function CanvasRoomPage({
+export default async function CanvasRoomPage({
   params,
 }: {
-  params: { roomid: string };
+  params: Promise<{ roomid: string }>;
 }) {
-  const { roomid } = params;
+  const { roomid } = await params;
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-12">
@@ -13,7 +13,8 @@ export default function CanvasRoomPage({
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Room</h1>
           <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-300">
-            You’re viewing canvas room: <span className="font-mono">{roomid}</span>
+            You’re viewing canvas room:{" "}
+            <span className="font-mono">{roomid}</span>
           </p>
         </div>
 
