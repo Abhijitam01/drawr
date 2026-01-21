@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import axios from "axios";
 import { HTTP_BACKEND } from "@/config";
 import { useRouter } from "next/navigation";
@@ -25,27 +25,37 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  // Use lazy initialization to load from localStorage only once on mount
   const [authState, setAuthState] = useState<{
     user: User | null;
     token: string | null;
     loading: boolean;
-  }>({
-    user: null,
-    token: null,
-    loading: true,
+  }>(() => {
+    // Only access localStorage on the client side
+    if (typeof window !== "undefined") {
+      const storedToken = localStorage.getItem("token");
+      const storedUser = localStorage.getItem("user");
+
+      // Check if storedToken is the string "undefined" or null
+      const validToken =
+        storedToken && storedToken !== "undefined" ? storedToken : null;
+
+      return {
+        token: validToken,
+        user:
+          storedUser && storedUser !== "undefined"
+            ? JSON.parse(storedUser)
+            : null,
+        loading: false,
+      };
+    }
+    return {
+      user: null,
+      token: null,
+      loading: false,
+    };
   });
   const router = useRouter();
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setAuthState({
-      token: storedToken,
-      user: storedUser ? JSON.parse(storedUser) : null,
-      loading: false,
-    });
-  }, []);
 
   const login = async (email: string, password: string) => {
     try {
@@ -58,8 +68,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       // We might need to update the backend to return user info or fetch it separately
       const mockUser = { id: "temp-id", email, name: email.split("@")[0] };
 
-      localStorage.setItem("token", newToken);
-      localStorage.setItem("user", JSON.stringify(mockUser));
+      if (typeof window !== "undefined") {
+        localStorage.setItem("token", newToken);
+        localStorage.setItem("user", JSON.stringify(mockUser));
+      }
       setAuthState({
         token: newToken,
         user: mockUser,
@@ -79,7 +91,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         password,
         name,
       });
-      router.push("/signin");
+      // Auto-login after successful signup
+      await login(email, password);
     } catch (error) {
       console.error("Signup failed", error);
       throw error;
@@ -87,8 +100,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+    }
     setAuthState({
       token: null,
       user: null,
