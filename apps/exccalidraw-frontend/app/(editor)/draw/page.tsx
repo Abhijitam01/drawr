@@ -79,6 +79,7 @@ export default function DrawPage() {
 
 function DrawContent() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const interactiveCanvasRef = useRef<HTMLCanvasElement>(null);
   const [selectedTool, setSelectedTool] = useState<Tool>("rect");
   const [zoom, setZoom] = useState(1);
   const [camera, setCamera] = useState({ x: 0, y: 0 });
@@ -92,6 +93,9 @@ function DrawContent() {
   const [onlineUsers, setOnlineUsers] = useState<
     { userId: string; name: string }[]
   >([]);
+  const [editingTextId, setEditingTextId] = useState<string | null>(null);
+  const [editingTextPosition, setEditingTextPosition] = useState<{ x: number; y: number } | null>(null);
+  const textInputRef = useRef<HTMLTextAreaElement>(null);
 
   const searchParams = useSearchParams();
   const roomId = searchParams.get("roomId") || "1";
@@ -167,9 +171,30 @@ function DrawContent() {
     socketRef.current = ws;
 
     const handleResize = () => {
+      const dpr = window.devicePixelRatio || 1;
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
       if (canvasRef.current) {
-        canvasRef.current.width = window.innerWidth;
-        canvasRef.current.height = window.innerHeight;
+        canvasRef.current.width = width * dpr;
+        canvasRef.current.height = height * dpr;
+        canvasRef.current.style.width = `${width}px`;
+        canvasRef.current.style.height = `${height}px`;
+        const ctx = canvasRef.current.getContext("2d");
+        if (ctx) {
+          ctx.scale(dpr, dpr);
+        }
+      }
+
+      if (interactiveCanvasRef.current) {
+        interactiveCanvasRef.current.width = width * dpr;
+        interactiveCanvasRef.current.height = height * dpr;
+        interactiveCanvasRef.current.style.width = `${width}px`;
+        interactiveCanvasRef.current.style.height = `${height}px`;
+        const ctx = interactiveCanvasRef.current.getContext("2d");
+        if (ctx) {
+          ctx.scale(dpr, dpr);
+        }
       }
     };
 
@@ -187,6 +212,9 @@ function DrawContent() {
     useRef<Record<string, { name: string; x: number; y: number }>>(
       collaborators
     );
+  const socketRefForText = useRef<WebSocket | null>(null);
+  const onShapesUpdateRef = useRef<((shapes: Shape[]) => void) | null>(null);
+  const roomIdRef = useRef<string>(roomId);
 
   useEffect(() => {
     shapesRef.current = shapes;
@@ -197,21 +225,80 @@ function DrawContent() {
   }, [collaborators]);
 
   useEffect(() => {
+    roomIdRef.current = roomId;
+  }, [roomId]);
+
+  useEffect(() => {
+    socketRefForText.current = socketRef.current;
+  }, [socketRef.current]);
+
+  useEffect(() => {
+    if (editingTextId && textInputRef.current) {
+      textInputRef.current.focus();
+      textInputRef.current.select();
+    }
+  }, [editingTextId]);
+
+  const handleTextEditComplete = (text: string, shapeId: string) => {
+    if (text.trim()) {
+      const newShapes = shapes.map((s) =>
+        s.id === shapeId && s.type === "text" ? { ...s, text } : s
+      );
+      setShapes(newShapes);
+      if (onShapesUpdateRef.current) {
+        onShapesUpdateRef.current(newShapes);
+      }
+      if (socketRefForText.current) {
+        const shape = newShapes.find((s) => s.id === shapeId);
+        if (shape) {
+          socketRefForText.current.send(
+            JSON.stringify({
+              type: "chat",
+              message: JSON.stringify({ type: "update", shape }),
+              roomId: roomIdRef.current,
+            })
+          );
+        }
+      }
+    } else {
+      const newShapes = shapes.filter((s) => s.id !== shapeId);
+      setShapes(newShapes);
+      if (onShapesUpdateRef.current) {
+        onShapesUpdateRef.current(newShapes);
+      }
+      if (socketRefForText.current) {
+        socketRefForText.current.send(
+          JSON.stringify({
+            type: "chat",
+            message: JSON.stringify({ type: "delete", id: shapeId }),
+            roomId: roomIdRef.current,
+          })
+        );
+      }
+    }
+    setEditingTextId(null);
+    setEditingTextPosition(null);
+  };
+
+  useEffect(() => {
     let cleanup: (() => void) | undefined;
-    if (canvasRef.current && socketRef.current) {
+    if (canvasRef.current && interactiveCanvasRef.current && socketRef.current) {
+      const onShapesUpdateCallback = (newShapes: Shape[]) => {
+        setHistory((prev) => [...prev, newShapes]);
+        setRedoStack([]);
+        setShapes(newShapes);
+      };
+      onShapesUpdateRef.current = onShapesUpdateCallback;
       cleanup = initDraw(
         canvasRef.current,
+        interactiveCanvasRef.current,
         roomId,
         socketRef.current,
         selectedToolRef,
         zoomRef,
         cameraRef,
         currentStyleRef,
-        (newShapes) => {
-          setHistory((prev) => [...prev, newShapes]);
-          setRedoStack([]);
-          setShapes(newShapes);
-        },
+        onShapesUpdateCallback,
         (newZoom, newCamera) => {
           setZoom(newZoom);
           setCamera(newCamera);
@@ -223,13 +310,17 @@ function DrawContent() {
         setOnlineUsers,
         shapesRef,
         setShapes,
-        collaboratorsRef
+        collaboratorsRef,
+        setEditingTextId,
+        setEditingTextPosition,
+        zoom,
+        camera
       );
     }
     return () => {
       cleanup?.();
     };
-  }, [roomId, token]);
+  }, [roomId, token, zoom, camera]);
 
   const undo = () => {
     if (history.length === 0) return;
@@ -278,7 +369,48 @@ function DrawContent() {
         canRedo={redoStack.length > 0}
       />
 
-      <canvas ref={canvasRef} className="h-full w-full cursor-crosshair" />
+      <div className="relative h-full w-full">
+        <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
+        <canvas
+          ref={interactiveCanvasRef}
+          className="absolute inset-0 h-full w-full cursor-crosshair"
+        />
+        {editingTextId && editingTextPosition && (() => {
+          const textShape = shapes.find((s) => s.id === editingTextId && s.type === "text");
+          return (
+            <textarea
+              ref={textInputRef}
+              className="absolute border-none bg-transparent text-white outline-none resize-none overflow-hidden"
+              style={{
+                left: `${editingTextPosition.x * zoom + camera.x}px`,
+                top: `${(editingTextPosition.y - 20) * zoom + camera.y}px`,
+                fontSize: `${20 * zoom}px`,
+                fontFamily: "sans-serif",
+                color: textShape?.style.stroke || strokeColor,
+                transform: "translate(0, 0)",
+              }}
+              defaultValue={textShape?.text || ""}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                if (editingTextId) {
+                  handleTextEditComplete(e.currentTarget.value, editingTextId);
+                }
+              } else if (e.key === "Escape") {
+                setEditingTextId(null);
+                setEditingTextPosition(null);
+              }
+            }}
+            onBlur={() => {
+              if (textInputRef.current && editingTextId) {
+                handleTextEditComplete(textInputRef.current.value, editingTextId);
+              }
+            }}
+            autoFocus
+            />
+          );
+        })()}
+      </div>
 
       <div className="pointer-events-none fixed bottom-6 left-6 text-[10px] font-medium tracking-widest text-zinc-500 uppercase">
         Space + Drag to Pan • Scroll to Zoom
@@ -289,6 +421,7 @@ function DrawContent() {
 
 function initDraw(
   canvas: HTMLCanvasElement,
+  interactiveCanvas: HTMLCanvasElement,
   roomId: string,
   socket: WebSocket,
   selectedToolRef: React.MutableRefObject<Tool>,
@@ -310,11 +443,20 @@ function initDraw(
   setShapes: React.Dispatch<React.SetStateAction<Shape[]>>,
   collaboratorsRef: React.RefObject<
     Record<string, { name: string; x: number; y: number }>
-  >
+  >,
+  setEditingTextId: (id: string | null) => void,
+  setEditingTextPosition: (pos: { x: number; y: number } | null) => void,
+  currentZoom: number,
+  currentCamera: { x: number; y: number }
 ) {
   const ctx = canvas.getContext("2d");
-  if (!ctx) return;
+  const interactiveCtx = interactiveCanvas.getContext("2d");
+  if (!ctx || !interactiveCtx) return;
+  const dpr = window.devicePixelRatio || 1;
+  ctx.scale(dpr, dpr);
+  interactiveCtx.scale(dpr, dpr);
   const rc = rough.canvas(canvas);
+  const interactiveRc = rough.canvas(interactiveCanvas);
 
   let clicked = false;
   let isPanning = false;
@@ -327,6 +469,9 @@ function initDraw(
   let dragStart: Point | null = null;
   let initialShapePos: Shape | null = null;
   let resizeHandle: string | null = null;
+  let lastClickTime = 0;
+  let lastClickPos: Point | null = null;
+  let rafId: number | null = null;
 
   getExistingShapes(roomId).then((s) => {
     setShapes(s);
@@ -362,7 +507,7 @@ function initDraw(
         ...prev,
         [message.userId]: { name: message.name, x: message.x, y: message.y },
       }));
-      render();
+      renderInteractive();
     } else if (message.type === "user_list") {
       setOnlineUsers(message.users);
     }
@@ -377,17 +522,48 @@ function initDraw(
     };
   };
 
-  const render = () => {
-    clearCanvas(
+  let lastShapesHash = "";
+
+  const renderStatic = () => {
+    const shapes = shapesRef.current || [];
+    const shapesHash = JSON.stringify(shapes);
+    if (shapesHash !== lastShapesHash) {
+      renderStaticCanvas(
+        shapes,
+        canvas,
+        ctx,
+        rc,
+        zoomRef.current,
+        cameraRef.current
+      );
+      lastShapesHash = shapesHash;
+    }
+  };
+
+  const renderInteractive = () => {
+    renderInteractiveCanvas(
       shapesRef.current || [],
-      canvas,
-      ctx,
-      rc,
+      interactiveCanvas,
+      interactiveCtx,
       zoomRef.current,
       cameraRef.current,
       selectedShapeIdRef.current,
       collaboratorsRef.current || {}
     );
+  };
+
+  const renderWithRAF = () => {
+    if (rafId !== null) return;
+    rafId = requestAnimationFrame(() => {
+      renderStatic();
+      renderInteractive();
+      rafId = null;
+    });
+  };
+
+  const render = () => {
+    renderStatic();
+    renderInteractive();
   };
 
   const handleMouseDown = (e: MouseEvent) => {
@@ -411,7 +587,8 @@ function initDraw(
             roomId,
           })
         );
-        render();
+        renderStatic();
+        renderInteractive();
       }
       return;
     }
@@ -442,7 +619,7 @@ function initDraw(
 
       const shape = [...(shapesRef.current || [])]
         .reverse()
-        .find((s) => isPointInShape(pos, s));
+        .find((s) => isPointInShape(pos, s, zoomRef.current));
       if (shape) {
         setSelectedShapeId(shape.id);
         clicked = true;
@@ -451,13 +628,13 @@ function initDraw(
       } else {
         setSelectedShapeId(null);
       }
-      render();
+      renderInteractive();
       return;
     }
 
     if (selectedTool === "eraser") {
       const shapeToDelete = shapesRef.current?.find((s) =>
-        isPointInShape(pos, s)
+        isPointInShape(pos, s, zoomRef.current)
       );
       if (shapeToDelete) {
         const newShapes = (shapesRef.current || []).filter(
@@ -472,36 +649,52 @@ function initDraw(
             roomId,
           })
         );
-        render();
+        renderStatic();
+        renderInteractive();
       }
       return;
     }
 
-    if (selectedTool === "text") {
-      const text = prompt("Enter text:");
-      if (text) {
-        const shape: Shape = {
-          id: Math.random().toString(36).substr(2, 9),
-          type: "text",
-          x: pos.x,
-          y: pos.y,
-          text,
-          style: currentStyleRef.current,
-        };
-        const newShapes = [...(shapesRef.current || []), shape];
-        setShapes(newShapes);
-        onShapesUpdate(newShapes);
-        socket.send(
-          JSON.stringify({
-            type: "chat",
-            message: JSON.stringify({ shape }),
-            roomId,
-          })
-        );
-        render();
+    const now = Date.now();
+    const isDoubleClick =
+      now - lastClickTime < 300 &&
+      lastClickPos &&
+      Math.abs(lastClickPos.x - pos.x) < 5 &&
+      Math.abs(lastClickPos.y - pos.y) < 5;
+
+    if (isDoubleClick && lastClickPos) {
+      const textShape = [...(shapesRef.current || [])]
+        .reverse()
+        .find((s) => s.type === "text" && isPointInShape(lastClickPos!, s, zoomRef.current));
+      if (textShape) {
+        setEditingTextId(textShape.id);
+        setEditingTextPosition({ x: textShape.x, y: textShape.y });
+        lastClickTime = 0;
+        lastClickPos = null;
+        return;
       }
+    }
+
+    if (selectedTool === "text") {
+      const shape: Shape = {
+        id: Math.random().toString(36).substr(2, 9),
+        type: "text",
+        x: pos.x,
+        y: pos.y,
+        text: "",
+        style: currentStyleRef.current,
+      };
+      const newShapes = [...(shapesRef.current || []), shape];
+      setShapes(newShapes);
+      setEditingTextId(shape.id);
+      setEditingTextPosition({ x: pos.x, y: pos.y });
+      lastClickTime = now;
+      lastClickPos = pos;
       return;
     }
+
+    lastClickTime = now;
+    lastClickPos = pos;
 
     clicked = true;
     startX = pos.x;
@@ -529,6 +722,7 @@ function initDraw(
         (s) => s.id === selectedShapeId
       );
       if (movedShape) {
+        setShapes(shapesRef.current || []);
         onShapesUpdate(shapesRef.current || []);
         socket.send(
           JSON.stringify({
@@ -537,6 +731,8 @@ function initDraw(
             roomId,
           })
         );
+        renderStatic();
+        renderInteractive();
       }
       dragStart = null;
       initialShapePos = null;
@@ -634,7 +830,8 @@ function initDraw(
         roomId,
       })
     );
-    render();
+    renderStatic();
+    renderInteractive();
   };
 
   const handleMouseMove = (e: MouseEvent) => {
@@ -712,17 +909,17 @@ function initDraw(
           }
           return s;
         });
-        setShapes(newShapes);
-        render();
-        return;
-      }
+        shapesRef.current = newShapes;
+        renderWithRAF();
+      return;
+    }
 
-      render();
+      renderInteractive();
 
-      ctx.save();
+      interactiveCtx.save();
       const zoom = zoomRef.current;
       const camera = cameraRef.current;
-      ctx.setTransform(zoom, 0, 0, zoom, camera.x, camera.y);
+      interactiveCtx.setTransform(zoom, 0, 0, zoom, camera.x, camera.y);
 
       const width = pos.x - startX;
       const height = pos.y - startY;
@@ -734,12 +931,12 @@ function initDraw(
       };
 
       if (selectedTool === "rect") {
-        rc.rectangle(startX, startY, width, height, roughOpts);
+        interactiveRc.rectangle(startX, startY, width, height, roughOpts);
       } else if (selectedTool === "circle") {
         const radius = Math.sqrt(width * width + height * height);
-        rc.circle(startX, startY, radius * 2, roughOpts);
+        interactiveRc.circle(startX, startY, radius * 2, roughOpts);
       } else if (selectedTool === "diamond") {
-        rc.polygon(
+        interactiveRc.polygon(
           [
             [startX + width / 2, startY],
             [startX + width, startY + height / 2],
@@ -749,18 +946,17 @@ function initDraw(
           roughOpts
         );
       } else if (selectedTool === "arrow") {
-        rc.line(startX, startY, pos.x, pos.y, roughOpts);
-        // Simple arrow head
+        interactiveRc.line(startX, startY, pos.x, pos.y, roughOpts);
         const angle = Math.atan2(pos.y - startY, pos.x - startX);
         const headlen = 10 / zoom;
-        rc.line(
+        interactiveRc.line(
           pos.x,
           pos.y,
           pos.x - headlen * Math.cos(angle - Math.PI / 6),
           pos.y - headlen * Math.sin(angle - Math.PI / 6),
           roughOpts
         );
-        rc.line(
+        interactiveRc.line(
           pos.x,
           pos.y,
           pos.x - headlen * Math.cos(angle + Math.PI / 6),
@@ -768,17 +964,17 @@ function initDraw(
           roughOpts
         );
       } else if (selectedTool === "line") {
-        rc.line(startX, startY, pos.x, pos.y, roughOpts);
+        interactiveRc.line(startX, startY, pos.x, pos.y, roughOpts);
       } else if (selectedTool === "pencil") {
         currentPencilPoints.push({ x: pos.x, y: pos.y });
         if (currentPencilPoints.length > 1) {
-          rc.linearPath(
+          interactiveRc.linearPath(
             currentPencilPoints.map((p) => [p.x, p.y]),
             roughOpts
           );
         }
       }
-      ctx.restore();
+      interactiveCtx.restore();
     }
 
     // Broadcast cursor position
@@ -852,42 +1048,100 @@ function initDraw(
     if (e.code === "Space") spacePressed = false;
   };
 
-  canvas.addEventListener("mousedown", handleMouseDown);
-  canvas.addEventListener("mouseup", handleMouseUp);
-  canvas.addEventListener("mousemove", handleMouseMove);
-  canvas.addEventListener("wheel", handleWheel, { passive: false });
+  interactiveCanvas.addEventListener("mousedown", handleMouseDown);
+  interactiveCanvas.addEventListener("mouseup", handleMouseUp);
+  interactiveCanvas.addEventListener("mousemove", handleMouseMove);
+  interactiveCanvas.addEventListener("wheel", handleWheel, { passive: false });
   window.addEventListener("keydown", handleKeyDown);
   window.addEventListener("keyup", handleKeyUp);
 
+  renderStatic();
+
   return () => {
+    if (rafId !== null) {
+      cancelAnimationFrame(rafId);
+    }
     socket.removeEventListener("message", onMessage);
-    canvas.removeEventListener("mousedown", handleMouseDown);
-    canvas.removeEventListener("mouseup", handleMouseUp);
-    canvas.removeEventListener("mousemove", handleMouseMove);
-    canvas.removeEventListener("wheel", handleWheel);
+    interactiveCanvas.removeEventListener("mousedown", handleMouseDown);
+    interactiveCanvas.removeEventListener("mouseup", handleMouseUp);
+    interactiveCanvas.removeEventListener("mousemove", handleMouseMove);
+    interactiveCanvas.removeEventListener("wheel", handleWheel);
     window.removeEventListener("keydown", handleKeyDown);
     window.removeEventListener("keyup", handleKeyUp);
   };
 }
 
-function isPointInShape(p: Point, s: Shape): boolean {
+function isPointNearShapeBorder(
+  p: Point,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  threshold: number
+): boolean {
+  const distToLeft = Math.abs(p.x - x);
+  const distToRight = Math.abs(p.x - (x + width));
+  const distToTop = Math.abs(p.y - y);
+  const distToBottom = Math.abs(p.y - (y + height));
+
+  const insideX = p.x >= x && p.x <= x + width;
+  const insideY = p.y >= y && p.y <= y + height;
+
+  if (insideX && insideY) return true;
+
+  if (insideX) {
+    return distToTop <= threshold || distToBottom <= threshold;
+  }
+  if (insideY) {
+    return distToLeft <= threshold || distToRight <= threshold;
+  }
+
+  const distToTopLeft = Math.sqrt((p.x - x) ** 2 + (p.y - y) ** 2);
+  const distToTopRight = Math.sqrt((p.x - (x + width)) ** 2 + (p.y - y) ** 2);
+  const distToBottomLeft = Math.sqrt(
+    (p.x - x) ** 2 + (p.y - (y + height)) ** 2
+  );
+  const distToBottomRight = Math.sqrt(
+    (p.x - (x + width)) ** 2 + (p.y - (y + height)) ** 2
+  );
+
+  return (
+    distToTopLeft <= threshold ||
+    distToTopRight <= threshold ||
+    distToBottomLeft <= threshold ||
+    distToBottomRight <= threshold
+  );
+}
+
+function getTextBounds(text: string, fontSize: number): { width: number; height: number } {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return { width: 100, height: 20 };
+  ctx.font = `${fontSize}px sans-serif`;
+  const metrics = ctx.measureText(text);
+  return {
+    width: metrics.width,
+    height: fontSize,
+  };
+}
+
+function isPointInShape(p: Point, s: Shape, zoom: number = 1): boolean {
+  const hitThreshold = 8 / zoom;
+
   switch (s.type) {
     case "rect":
     case "diamond":
-      return (
-        p.x >= s.x &&
-        p.x <= s.x + s.width &&
-        p.y >= s.y &&
-        p.y <= s.y + s.height
-      );
+      return isPointNearShapeBorder(p, s.x, s.y, s.width, s.height, hitThreshold);
     case "circle":
       const d = Math.sqrt((p.x - s.centerX) ** 2 + (p.y - s.centerY) ** 2);
       return d <= s.radius;
-    case "text":
-      return p.x >= s.x && p.x <= s.x + 100 && p.y >= s.y - 20 && p.y <= s.y;
+    case "text": {
+      const bounds = getTextBounds(s.text, 20);
+      return isPointNearShapeBorder(p, s.x, s.y - bounds.height, bounds.width, bounds.height, hitThreshold);
+    }
     case "pencil":
       return s.points.some(
-        (pt) => Math.sqrt((pt.x - p.x) ** 2 + (pt.y - p.y) ** 2) < 5
+        (pt) => Math.sqrt((pt.x - p.x) ** 2 + (pt.y - p.y) ** 2) < hitThreshold
       );
     case "arrow":
     case "line":
@@ -896,7 +1150,7 @@ function isPointInShape(p: Point, s: Shape): boolean {
           p,
           { x: s.startX, y: s.startY },
           { x: s.endX, y: s.endY }
-        ) < 5
+        ) < hitThreshold
       );
   }
   return false;
@@ -912,24 +1166,114 @@ function distToSegment(p: Point, v: Point, w: Point) {
   );
 }
 
-function clearCanvas(
+function getShapeBounds(shape: Shape): { minX: number; minY: number; maxX: number; maxY: number } {
+  switch (shape.type) {
+    case "rect":
+    case "diamond":
+      return {
+        minX: shape.x,
+        minY: shape.y,
+        maxX: shape.x + shape.width,
+        maxY: shape.y + shape.height,
+      };
+    case "text": {
+      const bounds = getTextBounds(shape.text, 20);
+      return {
+        minX: shape.x,
+        minY: shape.y - bounds.height,
+        maxX: shape.x + bounds.width,
+        maxY: shape.y,
+      };
+    }
+    case "circle":
+      return {
+        minX: shape.centerX - shape.radius,
+        minY: shape.centerY - shape.radius,
+        maxX: shape.centerX + shape.radius,
+        maxY: shape.centerY + shape.radius,
+      };
+    case "arrow":
+    case "line":
+      return {
+        minX: Math.min(shape.startX, shape.endX),
+        minY: Math.min(shape.startY, shape.endY),
+        maxX: Math.max(shape.startX, shape.endX),
+        maxY: Math.max(shape.startY, shape.endY),
+      };
+    case "pencil": {
+      const xs = shape.points.map((p) => p.x);
+      const ys = shape.points.map((p) => p.y);
+      return {
+        minX: Math.min(...xs),
+        minY: Math.min(...ys),
+        maxX: Math.max(...xs),
+        maxY: Math.max(...ys),
+      };
+    }
+  }
+}
+
+function getViewportBounds(
+  canvas: HTMLCanvasElement,
+  zoom: number,
+  camera: { x: number; y: number }
+): { minX: number; minY: number; maxX: number; maxY: number } {
+  const dpr = window.devicePixelRatio || 1;
+  const width = canvas.width / dpr;
+  const height = canvas.height / dpr;
+
+  const minX = -camera.x / zoom;
+  const minY = -camera.y / zoom;
+  const maxX = (width - camera.x) / zoom;
+  const maxY = (height - camera.y) / zoom;
+
+  return { minX, minY, maxX, maxY };
+}
+
+function shapesIntersectViewport(
+  shapeBounds: { minX: number; minY: number; maxX: number; maxY: number },
+  viewportBounds: { minX: number; minY: number; maxX: number; maxY: number }
+): boolean {
+  return !(
+    shapeBounds.maxX < viewportBounds.minX ||
+    shapeBounds.minX > viewportBounds.maxX ||
+    shapeBounds.maxY < viewportBounds.minY ||
+    shapeBounds.minY > viewportBounds.maxY
+  );
+}
+
+function renderStaticCanvas(
   existingShapes: Shape[],
   canvas: HTMLCanvasElement,
   ctx: CanvasRenderingContext2D,
   rc: RoughCanvas,
   zoom: number,
-  camera: { x: number; y: number },
-  selectedShapeId: string | null,
-  collaborators: Record<string, { name: string; x: number; y: number }>
+  camera: { x: number; y: number }
 ) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const dpr = window.devicePixelRatio || 1;
+  ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
   ctx.fillStyle = "#121212";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+
+  const viewportBounds = getViewportBounds(canvas, zoom, camera);
+  const visibleShapes = existingShapes.filter((shape) => {
+    const bounds = getShapeBounds(shape);
+    const padding = 50;
+    return shapesIntersectViewport(
+      {
+        minX: bounds.minX - padding,
+        minY: bounds.minY - padding,
+        maxX: bounds.maxX + padding,
+        maxY: bounds.maxY + padding,
+      },
+      viewportBounds
+    );
+  });
 
   ctx.save();
   ctx.setTransform(zoom, 0, 0, zoom, camera.x, camera.y);
 
-  existingShapes.forEach((shape) => {
+  visibleShapes.forEach((shape) => {
     const roughOpts = {
       stroke: shape.style.stroke,
       strokeWidth: shape.style.strokeWidth / zoom,
@@ -994,54 +1338,77 @@ function clearCanvas(
       ctx.font = `${20 / zoom}px sans-serif`;
       ctx.fillText(shape.text, shape.x, shape.y);
     }
-
-    if (shape.id === selectedShapeId) {
-      ctx.strokeStyle = "#3b82f6";
-      ctx.lineWidth = 1 / zoom;
-      ctx.setLineDash([5, 5]);
-      if (shape.type === "rect" || shape.type === "diamond") {
-        ctx.strokeRect(
-          shape.x - 4,
-          shape.y - 4,
-          shape.width + 8,
-          shape.height + 8
-        );
-      } else if (shape.type === "circle") {
-        ctx.beginPath();
-        ctx.arc(shape.centerX, shape.centerY, shape.radius + 4, 0, Math.PI * 2);
-        ctx.stroke();
-      } else if (shape.type === "text") {
-        ctx.strokeRect(shape.x - 4, shape.y - 24, 108, 28);
-      } else if (shape.type === "pencil") {
-        const minX = Math.min(...shape.points.map((p) => p.x));
-        const minY = Math.min(...shape.points.map((p) => p.y));
-        const maxX = Math.max(...shape.points.map((p) => p.x));
-        const maxY = Math.max(...shape.points.map((p) => p.y));
-        ctx.strokeRect(minX - 4, minY - 4, maxX - minX + 8, maxY - minY + 8);
-      } else if (shape.type === "arrow" || shape.type === "line") {
-        const minX = Math.min(shape.startX, shape.endX);
-        const minY = Math.min(shape.startY, shape.endY);
-        const maxX = Math.max(shape.startX, shape.endX);
-        const maxY = Math.max(shape.startY, shape.endY);
-        ctx.strokeRect(minX - 4, minY - 4, maxX - minX + 8, maxY - minY + 8);
-      }
-      ctx.setLineDash([]);
-
-      // Draw handles
-      const handles = getHandles(shape);
-      ctx.fillStyle = "#fff";
-      ctx.strokeStyle = "#3b82f6";
-      ctx.lineWidth = 1 / zoom;
-      handles.forEach((h) => {
-        ctx.beginPath();
-        ctx.arc(h.x, h.y, 4 / zoom, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-      });
-    }
   });
 
-  // Draw collaborator cursors
+  ctx.restore();
+}
+
+function renderInteractiveCanvas(
+  existingShapes: Shape[],
+  canvas: HTMLCanvasElement,
+  ctx: CanvasRenderingContext2D,
+  zoom: number,
+  camera: { x: number; y: number },
+  selectedShapeId: string | null,
+  collaborators: Record<string, { name: string; x: number; y: number }>
+) {
+  const dpr = window.devicePixelRatio || 1;
+  ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+
+  ctx.save();
+  ctx.setTransform(zoom, 0, 0, zoom, camera.x, camera.y);
+
+  const selectedShape = existingShapes.find((s) => s.id === selectedShapeId);
+  if (selectedShape) {
+    ctx.strokeStyle = "#3b82f6";
+    ctx.lineWidth = 1 / zoom;
+    ctx.setLineDash([5, 5]);
+    if (selectedShape.type === "rect" || selectedShape.type === "diamond") {
+      ctx.strokeRect(
+        selectedShape.x - 4,
+        selectedShape.y - 4,
+        selectedShape.width + 8,
+        selectedShape.height + 8
+      );
+    } else if (selectedShape.type === "circle") {
+      ctx.beginPath();
+      ctx.arc(selectedShape.centerX, selectedShape.centerY, selectedShape.radius + 4, 0, Math.PI * 2);
+      ctx.stroke();
+    } else if (selectedShape.type === "text") {
+      const bounds = getTextBounds(selectedShape.text, 20);
+      ctx.strokeRect(
+        selectedShape.x - 4,
+        selectedShape.y - bounds.height - 4,
+        bounds.width + 8,
+        bounds.height + 8
+      );
+    } else if (selectedShape.type === "pencil") {
+      const minX = Math.min(...selectedShape.points.map((p) => p.x));
+      const minY = Math.min(...selectedShape.points.map((p) => p.y));
+      const maxX = Math.max(...selectedShape.points.map((p) => p.x));
+      const maxY = Math.max(...selectedShape.points.map((p) => p.y));
+      ctx.strokeRect(minX - 4, minY - 4, maxX - minX + 8, maxY - minY + 8);
+    } else if (selectedShape.type === "arrow" || selectedShape.type === "line") {
+      const minX = Math.min(selectedShape.startX, selectedShape.endX);
+      const minY = Math.min(selectedShape.startY, selectedShape.endY);
+      const maxX = Math.max(selectedShape.startX, selectedShape.endX);
+      const maxY = Math.max(selectedShape.startY, selectedShape.endY);
+      ctx.strokeRect(minX - 4, minY - 4, maxX - minX + 8, maxY - minY + 8);
+    }
+    ctx.setLineDash([]);
+
+    const handles = getHandles(selectedShape);
+    ctx.fillStyle = "#fff";
+    ctx.strokeStyle = "#3b82f6";
+    ctx.lineWidth = 1 / zoom;
+    handles.forEach((h) => {
+      ctx.beginPath();
+      ctx.arc(h.x, h.y, 4 / zoom, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    });
+  }
+
   Object.entries(collaborators).forEach(([, pos]) => {
     ctx.fillStyle = "#3b82f6";
     ctx.beginPath();
@@ -1056,6 +1423,19 @@ function clearCanvas(
   });
 
   ctx.restore();
+}
+
+function clearCanvas(
+  existingShapes: Shape[],
+  canvas: HTMLCanvasElement,
+  ctx: CanvasRenderingContext2D,
+  rc: RoughCanvas,
+  zoom: number,
+  camera: { x: number; y: number },
+  selectedShapeId: string | null,
+  collaborators: Record<string, { name: string; x: number; y: number }>
+) {
+  renderStaticCanvas(existingShapes, canvas, ctx, rc, zoom, camera);
 }
 
 async function getExistingShapes(roomId: string) {
