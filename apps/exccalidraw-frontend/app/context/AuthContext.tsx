@@ -25,18 +25,15 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  // Use lazy initialization to load from localStorage only once on mount
   const [authState, setAuthState] = useState<{
     user: User | null;
     token: string | null;
     loading: boolean;
   }>(() => {
-    // Only access localStorage on the client side
     if (typeof window !== "undefined") {
       const storedToken = localStorage.getItem("token");
       const storedUser = localStorage.getItem("user");
 
-      // Check if storedToken is the string "undefined" or null
       const validToken =
         storedToken && storedToken !== "undefined" ? storedToken : null;
 
@@ -64,8 +61,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         password,
       });
       const { token: newToken } = res.data;
-      // For now, we don't get user info back from signin in the current backend implementation
-      // We might need to update the backend to return user info or fetch it separately
       const mockUser = { id: "temp-id", email, name: email.split("@")[0] };
 
       if (typeof window !== "undefined") {
@@ -79,7 +74,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       });
       router.push("/dashboard");
     } catch (error) {
-      console.error("Login failed", error);
       throw error;
     }
   };
@@ -91,10 +85,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         password,
         name,
       });
-      // Auto-login after successful signup
       await login(email, password);
     } catch (error) {
-      console.error("Signup failed", error);
       throw error;
     }
   };

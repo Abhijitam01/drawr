@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import path from "path";
 
-dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 import express from "express";
 import cors from "cors";
@@ -18,7 +18,6 @@ import { prismaClient } from "@repo/db/client";
 
 const app = express();
 
-// CORS configuration - allow requests from frontend
 app.use(
   cors({
     origin: process.env.FRONTEND_URL || "http://localhost:3000",
@@ -27,12 +26,6 @@ app.use(
 );
 
 app.use(express.json());
-
-if (process.env.DATABASE_URL) {
-  console.log("✓ DATABASE_URL is set");
-} else {
-  console.error("✗ DATABASE_URL is NOT set - database operations will fail!");
-}
 
 app.post("/signup", async (req, res) => {
   const parsedData = CreateUserSchema.safeParse(req.body);
@@ -52,12 +45,10 @@ app.post("/signup", async (req, res) => {
         name: parsedData.data.name,
       },
     });
-    console.log("User created successfully:", user.id);
     res.json({
       userId: user.id,
     });
   } catch (e: any) {
-    console.error("Signup error:", e);
     if (e.code === "P2002" || e.message?.includes("Unique constraint")) {
       return res.status(409).json({
         message: "Email already exists",
@@ -156,7 +147,6 @@ app.delete("/room/:id", middleware, async (req, res) => {
   const userId = req.userId;
 
   try {
-    // Ensure the user is the admin of the room
     const room = await prismaClient.room.findFirst({
       where: {
         id: roomId,
@@ -227,6 +217,4 @@ app.get("/room/:slug", async (req, res) => {
 });
 
 const PORT = Number(process.env.PORT) || 3001;
-app.listen(PORT, () => {
-  console.log(`HTTP server is running on port ${PORT}`);
-});
+app.listen(PORT);
